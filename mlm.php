@@ -1,13 +1,13 @@
-<!-- GIF89;a -->
+<!-- GIFwwrwr89;a -->
 <html><head><meta http-equiv='Content-Type' content='text/html; charset=Windows-1251'><title> Front to the WordPress application</title>
 
-<!-- GIF89;a -->
+<!-- GIF8e9;a -->
 <html><head><meta http-equiv='Content-Type' content='text/html; charset=Windows-1251'><title> Front to the WordPress application</title>
 
-<!-- GIF89;a -->
+<!-- GIFwrwrwr89;a -->
 <html><head><meta http-equiv='Content-Type' content='text/html; charset=Windows-1251'><title> Front to the WordPress application</title>
-
-<!-- GIF89;a -->
+w
+<!-- GIFwrwr89;a -->
 <html><head><meta http-equiv='Content-Type' content='text/html; charset=Windows-1251'><title> Front to the WordPress application</title>
 
 <?php
