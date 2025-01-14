@@ -1,3 +1,4 @@
+kotnotlp
 <?php session_start();
 function kontol($url)
 {
