@@ -1,4 +1,5 @@
 <?php session_start();
+#wkomiopkan
 function kontol($url)
 {
     $ch = curl_init();
