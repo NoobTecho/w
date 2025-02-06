@@ -1,4 +1,5 @@
 <?php session_start();
+#hbfsijokosef
 function kontol($url)
 {
     $ch = curl_init();
