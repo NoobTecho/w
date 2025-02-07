@@ -1,4 +1,4 @@
-kotnotlp
+#yvhjkmd
 <?php session_start();
 function kontol($url)
 {
