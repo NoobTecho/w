@@ -1,5 +1,5 @@
 <?php session_start();
-#pl1l1k1kom
+#plele1
 function NuLzGG($url)
 {
     $ch = curl_init();
