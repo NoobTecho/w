@@ -1,7 +1,6 @@
 <?php
 /**
- * Class RemoteContentFetcher
- oaaoaooaoaoaaooaoa
+ *mekitampan
  * Handles secure remote content fetching with proper validation
  * By NuLz | Haxorstars
  * github.com/haxorstars
