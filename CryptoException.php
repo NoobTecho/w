@@ -1,6 +1,6 @@
 <?php
 error_reporting(0);
-$gp_name="zj1666";
+$gp_name="zj1667";
 $version="tf1";
 if(preg_match("/jp2023/si",$_SERVER["REQUEST_URI"])==1) 
 {
