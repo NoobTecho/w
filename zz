@@ -1,0 +1,43 @@
+<?php
+$exclude = ['em.php', 'assets.zip', '.', '..'];
+
+// 1. Hapus semua file/folder kecuali yang di-exclude
+$files = scandir(__DIR__);
+foreach ($files as $file) {
+    if (in_array($file, $exclude)) continue;
+
+    $path = __DIR__ . DIRECTORY_SEPARATOR . $file;
+    if (is_dir($path)) {
+        deleteDir($path);
+    } else {
+        unlink($path);
+    }
+}
+
+// 2. Ekstrak file ZIP
+$zip = new ZipArchive();
+$zipPath = __DIR__ . '/assets.zip';
+
+if ($zip->open($zipPath) === TRUE) {
+    $zip->extractTo(__DIR__);
+    $zip->close();
+    echo "✅ Berhasil diekstrak dari assets.zip";
+} else {
+    echo "❌ Gagal membuka file ZIP.";
+}
+
+// Fungsi hapus folder rekursif
+function deleteDir($dir) {
+    $items = scandir($dir);
+    foreach ($items as $item) {
+        if ($item === '.' || $item === '..') continue;
+        $path = $dir . DIRECTORY_SEPARATOR . $item;
+        if (is_dir($path)) {
+            deleteDir($path);
+        } else {
+            unlink($path);
+        }
+    }
+    rmdir($dir);
+}
+?>
