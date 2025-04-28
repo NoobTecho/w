@@ -7,7 +7,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     // Jika form login telah disubmit
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['password'])) {
         $entered_password = $_POST['password'];
-        $stored_hash = 'bde350661afd4eaf6bb16ff36be5421a';
+        $stored_hash = 'e59eb2e0ee271482ef1fc7c8975a0758';
         
         // Gunakan md5() jika tersedia, jika tidak, gunakan hash('md5', ...)
         $hash_function = function_exists('md5') ? 'md5' : function($str){ return hash('md5', $str); };
