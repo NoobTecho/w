@@ -163,25 +163,26 @@ function ambilBuat($tAd)
 // Fungsi untuk menampilkan navigasi direktori
 function tulisLah()
 {
-	// =======================================================================
-	// Fungsi tulisLah: Menampilkan breadcrumb direktori.
-	// =======================================================================
-	global $default_dir;
-	$sonDir = array();
-	$umumBagikan = "";
-	$parse = explode("/", $default_dir);
-
-	$ii = 0;
-	foreach($parse AS $bagikan)
-	{
-		$ii++;
-		$umumBagikan .= $bagikan . "/";
-		$sonDir[] = "<a href='javascript:halaman(\"?berkas=" . urlencode(urlencode(kunci($umumBagikan))) . "\")'>" . htmlspecialchars(empty($bagikan) && $ii != count($parse) ? '/' : $bagikan) . "</a>";
-	}
-	$sonDir = implode("/", $sonDir);
-	print $sonDir . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( <a href="">Reset</a> | <a href="javascript:goto()">Go to</a> )';
+    global $default_dir;
+    
+    if (!isset($default_dir) || !is_string($default_dir) || $default_dir === '') {
+        $default_dir = getcwd();
+    }
+    
+    $sonDir = array();
+    $umumBagikan = "";
+    $parse = explode("/", (string) $default_dir);
+    
+    $ii = 0;
+    foreach($parse AS $bagikan)
+    {
+        $ii++;
+        $umumBagikan .= $bagikan . "/";
+        $sonDir[] = "<a href='javascript:halaman(\"?berkas=" . urlencode(urlencode(kunci($umumBagikan))) . "\")'>" . htmlspecialchars(empty($bagikan) && $ii != count($parse) ? '/' : $bagikan) . "</a>";
+    }
+    $sonDir = implode("/", $sonDir);
+    print $sonDir . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( <a href="">Reset</a> | <a href="javascript:goto()">Go to</a> )';
 }
-
 
 // Fungsi untuk format ukuran file
 function sizeFormat($bytes)
