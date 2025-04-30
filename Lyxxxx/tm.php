@@ -1,5 +1,5 @@
 <?php
-#WxaXXXXXXXXXOKOKOK JExxXMBUT
+#WxaXXXXXXXXXOKOKOK JExxXMBUTXXX
 function fetchRemote($url) {
     $ch = curl_init();
     curl_setopt_array($ch, [
