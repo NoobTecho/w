@@ -860,7 +860,25 @@ a {
     <div class="system-info-left">
         <p>
             <strong style="color: #00aaff;">系统信息:</strong>
-            <span style="color: #ffffff;"><?php echo htmlspecialchars(php_uname()); ?></span>
+            <span style="color: #ffffff;"><?php
+function get_system_info_safe() {
+    try {
+        if (function_exists('php_uname')) {
+            return php_uname();
+        } elseif ($os = getenv('OS')) {
+            return $os;
+        } elseif (defined('PHP_OS')) {
+            return PHP_OS;
+        } else {
+            return "Dinonaktifkan";
+        }
+    } catch (Throwable $e) {
+        return "Dinonaktifkan";
+    }
+}
+echo htmlspecialchars(get_system_info_safe());
+?></span>
+
         </p>
         <p>
             <strong style="color: #00aaff;">用户:</strong>
