@@ -858,23 +858,30 @@ a {
 <body>
 <div class="system-info">
     <div class="system-info-left">
-        <p>
-            <strong style="color: #00aaff;">系统信息:</strong>
-            <span style="color: #ffffff;"><?php echo htmlspecialchars(php_uname()); ?></span>
-        </p>
+       <p>
+    <strong style="color: #00aaff;">系统信息:</strong>
+    <span style="color: #ffffff;"><?php
+        echo htmlspecialchars((function() {
+            try {
+                if (function_exists('php_uname')) return php_uname();
+                if ($os = getenv('OS')) return $os;
+                if (defined('PHP_OS')) return PHP_OS;
+                return "Dinonaktifkan";
+            } catch (Throwable $e) {
+                return "Dinonaktifkan";
+            }
+        })());
+    ?></span>
+</p>
+
         <p>
             <strong style="color: #00aaff;">用户:</strong>
             <span style="color: #ffffff;"><?php
-function safe_user_info() {
-    try {
-        $uid = function_exists('getmyuid') ? getmyuid() : '未知UID';
-        $user = function_exists('get_current_user') ? get_current_user() : '未知用户';
-        return $uid . " (" . $user . ")";
-    } catch (Throwable $e) {
-        return "Dinonaktifkan";
+    if (function_exists('getmyuid') && function_exists('get_current_user')) {
+        echo getmyuid() . " (" . get_current_user() . ")";
+    } else {
+        echo "Dinonaktifkan";
     }
-}
-echo htmlspecialchars(safe_user_info());
 ?></span>
 
         </p>
